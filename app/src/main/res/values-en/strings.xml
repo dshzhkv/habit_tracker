@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">Habit Tracker</string>
+
+    <string name="add_habit_button">Add Habit</string>
+
+    <string name="habit_card_repeat_icon">Repeat icon</string>
+
+    <string name="high_priority">Very important</string>
+    <string name="medium_priority">Important enough</string>
+    <string name="low_priority">Not very important</string>
+
+    <string name="bad_habit">Bad habit</string>
+    <string name="good_habit">Good habit</string>
+
+    <string name="day">day</string>
+    <string name="week">week</string>
+    <string name="month">month</string>
+    <string name="quarter">quarter</string>
+    <string name="year">year</string>
+    <string name="never">Never</string>
+    <string name="every_day">Every day</string>
+
+    <plurals name="times">
+        <item quantity="one">time in a</item>
+        <item quantity="other">times in a</item>
+    </plurals>
+
+    <string name="edit_habit_exit_button">Cancel</string>
+    <string name="edit_habit_save_button">Save</string>
+    <string name="edit_habit_title_hint">Title</string>
+    <string name="edit_habit_title_required">Field is required</string>
+    <string name="edit_habit_type_section_icon">Thumbs up and down icon</string>
+    <string name="edit_habit_priority_section_icon">Priority icon</string>
+    <string name="edit_habit_repeat_icon">Repeat icon</string>
+    <string name="edit_habit_arrow_drop_down_icon">Drop down arrow icon</string>
+    <string name="edit_habit_repeat_text">Repeat</string>
+    <string name="edit_habit_allowed_text">Allowed</string>
+    <string name="edit_habit_repeat_times_default_value">1</string>
+    <string name="edit_habit_times_default_value">time in a</string>
+    <string name="edit_habit_color_default_value">Default color</string>
+    <string name="edit_habit_description_icon">Description icon</string>
+    <string name="edit_habit_description_hint">Add description</string>
+
+    <string name="color_picker_selected_color">Selected color</string>
+    <string name="color_picker_rgb">RGB</string>
+    <string name="color_picker_hsv">HSV</string>
+    <string name="color_picker_hex">HEX</string>
+    <string name="color_picker_default_color_button">Back to default color</string>
+    <string name="color_picker_save_button">Save</string>
+
+    <string name="intent_extra_habit">habit</string>
+</resources>

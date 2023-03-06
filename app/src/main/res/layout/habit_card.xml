@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginVertical="@dimen/habit_card_vertical_margin"
+    android:layout_marginHorizontal="@dimen/habit_card_horizontal_margin"
+    android:background="@drawable/habit_card_background"
+    android:elevation="2dp"
+    android:translationZ="2dp">
+
+    <View android:id="@+id/habit_color_tag"
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/habit_card_color_tag" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginVertical="@dimen/habit_card_items_margin">
+
+        <LinearLayout android:id="@+id/main_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="@dimen/habit_card_items_margin">
+
+            <TextView android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/habit_card_main_section_items_margin"
+                android:textAppearance="@style/Text.MainText"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginVertical="@dimen/habit_card_main_section_items_margin">
+
+                <TextView android:id="@+id/type_tag"
+                    android:layout_width="95dp"
+                    style="@style/HabitTag"
+                    android:layout_marginEnd="10dp"/>
+
+                <TextView android:id="@+id/priority_tag"
+                    android:layout_width="150dp"
+                    style="@style/HabitTag"/>
+
+            </LinearLayout>
+
+
+            <TextView android:id="@+id/repeat_information"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="@dimen/habit_card_main_section_items_margin"
+                android:textAppearance="@style/Text.ExtraSmallText"
+                app:drawableLeftCompat="@drawable/repeat_icon_with_margin"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/description_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="@dimen/habit_card_description_section_items_margin"
+                android:background="?android:attr/listDivider"/>
+
+            <TextView android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/habit_card_items_margin"
+                android:layout_marginVertical="@dimen/habit_card_description_section_items_margin"
+                android:textAppearance="@style/Text.SmallText"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
