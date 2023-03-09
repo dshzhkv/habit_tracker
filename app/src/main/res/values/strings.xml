@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Habit Tracker</string>
 
-    <string name="add_habit_button">Добавить привычку</string>
+    <string name="main_activity_no_habits">У вас ещё нет привычек</string>
+    <string name="main_activity_add_habit_button">Добавить привычку</string>
 
     <string name="habit_card_repeat_icon">Иконка повторения</string>
 
@@ -51,4 +52,5 @@
     <string name="color_picker_save_button">Сохранить</string>
 
     <string name="intent_extra_habit">habit</string>
+    <string name="intent_extra_habit_position">position</string>
 </resources>

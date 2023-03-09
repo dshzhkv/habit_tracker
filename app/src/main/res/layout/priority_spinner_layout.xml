@@ -3,7 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView android:id="@+id/type_tag"
+    <TextView
+        android:id="@+id/priority_spinner_tag"
         android:layout_width="wrap_content"
-        style="@style/HabitTag"/>
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/edit_habit_priority_spinner_tag_padding"
+        android:paddingEnd="@dimen/edit_habit_priority_spinner_tag_padding"
+        android:layout_margin="@dimen/edit_habit_priority_spinner_tag_margin"
+        android:background="@drawable/habit_card_tag_background"
+        android:backgroundTint="@android:color/transparent"
+        android:textAlignment="center"
+        android:textAppearance="@style/Text.MainText"/>
 </FrameLayout>

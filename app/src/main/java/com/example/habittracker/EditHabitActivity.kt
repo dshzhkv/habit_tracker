@@ -1,6 +1,5 @@
 package com.example.habittracker
 
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -25,6 +24,8 @@ class EditHabitActivity : AppCompatActivity(), ColorPickerDialog.OnSaveColorList
 
     private var titleIsRequiredMessage: TextView? = null
 
+    private var editedHabitPosition: Int = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
@@ -48,7 +49,8 @@ class EditHabitActivity : AppCompatActivity(), ColorPickerDialog.OnSaveColorList
         super.onStart()
 
         val habit: Habit? = intent.getSerializable(getString(R.string.intent_extra_habit), Habit::class.java)
-        if (habit != null) {
+        val habitPosition: Int = intent.getIntExtra(getString(R.string.intent_extra_habit_position), -1)
+        if (habit != null && habitPosition >= 0) {
             titleEditText?.setText(habit.title)
             typeRadioGroup?.check(habit.type.radioButtonId)
             prioritySpinner?.setSelection(HabitPriority.values().indexOf(habit.priority))
@@ -56,6 +58,8 @@ class EditHabitActivity : AppCompatActivity(), ColorPickerDialog.OnSaveColorList
             repetitionPeriodSpinner?.setSelection(Period.values().indexOf(habit.repetitionPeriod))
             setSelectedColor(habit.colorId)
             descriptionEditText?.setText(habit.description)
+
+            editedHabitPosition = habitPosition
         }
     }
 
@@ -88,11 +92,10 @@ class EditHabitActivity : AppCompatActivity(), ColorPickerDialog.OnSaveColorList
     }
 
     private fun setAdapterForPrioritySpinner() {
-        prioritySpinner?.adapter = ArrayAdapter(
+        prioritySpinner?.adapter = PriorityAdapter(
             this,
-            android.R.layout.simple_spinner_item,
-            HabitPriority.values().map { getString(it.textId) }
-        )
+            R.layout.priority_spinner_layout,
+            HabitPriority.values())
     }
 
     private fun setListenerOnRepetitionTimesEditText() {
@@ -115,7 +118,7 @@ class EditHabitActivity : AppCompatActivity(), ColorPickerDialog.OnSaveColorList
         repetitionPeriodSpinner?.adapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_item,
-            Period.values().map { getString(it.textId) }
+            Period.strings(this)
         )
     }
 
@@ -144,13 +147,10 @@ class EditHabitActivity : AppCompatActivity(), ColorPickerDialog.OnSaveColorList
             if (title.isEmpty()) {
                 titleIsRequiredMessage?.visibility = View.VISIBLE
             } else {
-                val type = when (typeRadioGroup?.checkedRadioButtonId) {
-                    R.id.bad_habit_button -> HabitType.BAD
-                    else -> HabitType.GOOD
-                }
-                val priority: HabitPriority = HabitPriority.values()[prioritySpinner?.selectedItemPosition ?: 0]
+                val type = HabitType from typeRadioGroup?.checkedRadioButtonId
+                val priority: HabitPriority = HabitPriority at prioritySpinner?.selectedItemPosition
                 val repetitionTimes: Int = repetitionTimesEditText?.text.toString().toInt()
-                val repetitionPeriod: Period = Period.values()[repetitionPeriodSpinner?.selectedItemPosition ?: 0]
+                val repetitionPeriod: Period = Period at repetitionPeriodSpinner?.selectedItemPosition
                 val description: String = descriptionEditText?.text.toString()
 
                 val newHabit = Habit(
@@ -163,10 +163,12 @@ class EditHabitActivity : AppCompatActivity(), ColorPickerDialog.OnSaveColorList
                     selectedColorId,
                 )
 
-                val saveIntent: Intent = Intent(this, MainActivity::class.java)
-                    .apply { putExtra(getString(R.string.intent_extra_habit), newHabit) }
-
-                startActivity(saveIntent)
+                if (editedHabitPosition >= 0 && editedHabitPosition < MainActivity.fakeHabits.size) {
+                    MainActivity.fakeHabits[editedHabitPosition] = newHabit
+                } else {
+                    MainActivity.fakeHabits.add(newHabit)
+                }
+                finish()
             }
         }
     }

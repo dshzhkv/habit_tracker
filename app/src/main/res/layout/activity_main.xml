@@ -7,6 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+        <TextView
+            android:id="@+id/no_habits_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/main_activity_no_habits"
+            android:textAppearance="@style/Text.MainText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/habits_list"
             android:layout_width="match_parent"
@@ -31,7 +43,7 @@
             app:backgroundTint="@color/dark_blue"
             android:src="@drawable/add_icon"
             app:tint="@color/white"
-            android:contentDescription="@string/add_habit_button" />
+            android:contentDescription="@string/main_activity_add_habit_button" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -40,13 +40,13 @@
     <style name="RadioButton">
         <item name="android:textAppearance">@style/Text.MainText</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_height">@dimen/edit_habit_radio_button_height</item>
         <item name="android:layout_marginStart">@dimen/edit_habit_radio_button_margin</item>
     </style>
 
     <style name="ColorPickerButton">
         <item name="cornerRadius">@dimen/corner_radius</item>
         <item name="strokeColor">@color/white</item>
-        <item name="strokeWidth">1dp</item>
+        <item name="strokeWidth">@dimen/border_width</item>
     </style>
 </resources>
