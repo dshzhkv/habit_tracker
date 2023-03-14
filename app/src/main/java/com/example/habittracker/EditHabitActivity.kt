@@ -1,17 +1,22 @@
 package com.example.habittracker
 
 import android.content.res.ColorStateList
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.TextViewCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
+import com.example.habittracker.colorpicker.ColorPickerDialog
+import com.example.habittracker.colorpicker.OnSaveColorListener
+import com.example.habittracker.entities.Habit
+import com.example.habittracker.entities.HabitPriority
+import com.example.habittracker.entities.HabitType
+import com.example.habittracker.entities.Period
 
 
-class EditHabitActivity : AppCompatActivity(), ColorPickerDialog.OnSaveColorListener {
+class EditHabitActivity : AppCompatActivity(), OnSaveColorListener {
 
     private var titleEditText: EditText? = null
     private var typeRadioGroup: RadioGroup? = null
@@ -48,11 +53,14 @@ class EditHabitActivity : AppCompatActivity(), ColorPickerDialog.OnSaveColorList
     override fun onStart() {
         super.onStart()
 
-        val habit: Habit? = intent.getSerializable(getString(R.string.intent_extra_habit), Habit::class.java)
+        val habit: Habit? = intent.getSerializableExtra(getString(R.string.intent_extra_habit), Habit::class.java)
         val habitPosition: Int = intent.getIntExtra(getString(R.string.intent_extra_habit_position), -1)
         if (habit != null && habitPosition >= 0) {
             titleEditText?.setText(habit.title)
-            typeRadioGroup?.check(habit.type.radioButtonId)
+            typeRadioGroup?.check(when (habit.type) {
+                HabitType.GOOD -> R.id.good_habit_button
+                HabitType.BAD -> R.id.bad_habit_button
+            })
             prioritySpinner?.setSelection(HabitPriority.values().indexOf(habit.priority))
             repetitionTimesEditText?.setText(habit.repetitionTimes.toString())
             repetitionPeriodSpinner?.setSelection(Period.values().indexOf(habit.repetitionPeriod))
@@ -95,7 +103,8 @@ class EditHabitActivity : AppCompatActivity(), ColorPickerDialog.OnSaveColorList
         prioritySpinner?.adapter = PriorityAdapter(
             this,
             R.layout.priority_spinner_layout,
-            HabitPriority.values())
+            HabitPriority.values()
+        )
     }
 
     private fun setListenerOnRepetitionTimesEditText() {
@@ -118,18 +127,14 @@ class EditHabitActivity : AppCompatActivity(), ColorPickerDialog.OnSaveColorList
         repetitionPeriodSpinner?.adapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_item,
-            Period.strings(this)
+            Period.values().map { getString(it.textId) }
         )
     }
 
     private fun setListenerOnColorValue() {
-        colorValueTextView?.setOnClickListener { showColorPicker() }
-    }
-
-    private fun showColorPicker() {
-        val dialog = ColorPickerDialog(this, selectedColorId)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.show()
+        colorValueTextView?.setOnClickListener {
+            ColorPickerDialog(this, selectedColorId).show()
+        }
     }
 
     private fun setListenerOnCloseButton() {
@@ -141,44 +146,56 @@ class EditHabitActivity : AppCompatActivity(), ColorPickerDialog.OnSaveColorList
         val saveButton: Button = findViewById(R.id.save_habit_button)
 
         saveButton.setOnClickListener {
-
-            val title = titleEditText?.text.toString()
-
-            if (title.isEmpty()) {
-                titleIsRequiredMessage?.visibility = View.VISIBLE
-            } else {
-                val type = HabitType from typeRadioGroup?.checkedRadioButtonId
-                val priority: HabitPriority = HabitPriority at prioritySpinner?.selectedItemPosition
-                val repetitionTimes: Int = repetitionTimesEditText?.text.toString().toInt()
-                val repetitionPeriod: Period = Period at repetitionPeriodSpinner?.selectedItemPosition
-                val description: String = descriptionEditText?.text.toString()
-
-                val newHabit = Habit(
-                    title,
-                    type,
-                    priority,
-                    repetitionTimes,
-                    repetitionPeriod,
-                    description,
-                    selectedColorId,
-                )
-
-                if (editedHabitPosition >= 0 && editedHabitPosition < MainActivity.fakeHabits.size) {
+            if (isInputCorrect()) {
+                val newHabit = parseInput()
+                if (shouldEdit()) {
                     MainActivity.fakeHabits[editedHabitPosition] = newHabit
                 } else {
                     MainActivity.fakeHabits.add(newHabit)
                 }
                 finish()
+            } else {
+                titleIsRequiredMessage?.visibility = View.VISIBLE
             }
         }
+    }
+
+    private fun isInputCorrect(): Boolean = titleEditText?.text.toString().isNotEmpty()
+
+    private fun shouldEdit(): Boolean =
+        editedHabitPosition >= 0 && editedHabitPosition < MainActivity.fakeHabits.size
+
+    private fun parseInput(): Habit {
+        val title: String = titleEditText?.text.toString()
+        val type: HabitType = when (typeRadioGroup?.checkedRadioButtonId) {
+            R.id.bad_habit_button -> HabitType.BAD
+            else -> HabitType.GOOD
+        }
+        val priority: HabitPriority =  HabitPriority.values()[prioritySpinner?.selectedItemPosition ?: 0]
+        val repetitionTimes: Int = repetitionTimesEditText?.text.toString().toInt()
+        val repetitionPeriod: Period = Period.values()[repetitionPeriodSpinner?.selectedItemPosition ?: 0]
+        val description: String = descriptionEditText?.text.toString()
+
+        return Habit(
+            title,
+            type,
+            priority,
+            repetitionTimes,
+            repetitionPeriod,
+            description,
+            selectedColorId,
+        )
     }
 
     override fun setSelectedColor(colorId: Int) {
         selectedColorId = colorId
 
         val colorValue = getColor(colorId)
-        colorValueTextView?.compoundDrawableTintList = ColorStateList.valueOf(colorValue)
-        colorValueTextView?.text = colorValue.toHex()
+        if (colorValueTextView != null) {
+            TextViewCompat.setCompoundDrawableTintList(colorValueTextView!!,
+                ColorStateList.valueOf(colorValue))
+            colorValueTextView!!.text = colorValue.toHex()
+        }
     }
 }
 

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginVertical="@dimen/habit_card_vertical_margin"
     android:layout_marginHorizontal="@dimen/habit_card_horizontal_margin"
     android:background="@drawable/habit_card_background"
@@ -30,7 +31,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/habit_card_main_section_items_margin"
-                android:textAppearance="@style/Text.MainText"/>
+                android:textAppearance="@style/Text.MainText"
+                tools:text="Название"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -41,21 +43,25 @@
                 <TextView android:id="@+id/type_tag"
                     android:layout_width="@dimen/habit_card_type_tag_width"
                     style="@style/HabitTag"
+                    tools:text="Тип"
                     android:layout_marginEnd="@dimen/habit_card_margin_between_tags"/>
 
                 <TextView android:id="@+id/priority_tag"
                     android:layout_width="@dimen/habit_card_priority_tag_width"
-                    style="@style/HabitTag"/>
+                    style="@style/HabitTag"
+                    tools:text="Приоритет"/>
 
             </LinearLayout>
 
 
             <TextView android:id="@+id/repeat_information"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="24dp"
                 android:layout_marginVertical="@dimen/habit_card_main_section_items_margin"
                 android:textAppearance="@style/Text.ExtraSmallText"
-                app:drawableLeftCompat="@drawable/repeat_icon_with_margin"/>
+                app:drawableLeftCompat="@drawable/rounded_arrow_with_margin"
+                tools:text="Повторять x раз в период"
+                android:gravity="center"/>
 
 
         </LinearLayout>

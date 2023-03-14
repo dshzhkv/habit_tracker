@@ -27,7 +27,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:backgroundTint="@android:color/transparent"
-                android:src="@drawable/edit_habit_cancel_icon"
+                android:src="@drawable/ic_close"
                 android:contentDescription="@string/edit_habit_exit_button" />
 
             <Button android:id="@+id/save_habit_button"
@@ -81,7 +81,7 @@
             <ImageView
                 android:layout_width="@dimen/edit_habit_icon_width"
                 android:layout_height="@dimen/edit_habit_icon_extended_height"
-                android:src="@drawable/edit_habit_type_icon"
+                android:src="@drawable/ic_thumbs_up_and_down"
                 android:layout_marginEnd="@dimen/edit_habit_horizontal_margin"
                 android:contentDescription="@string/edit_habit_type_section_icon" />
 
@@ -121,7 +121,7 @@
             <ImageView
                 android:layout_width="@dimen/edit_habit_icon_width"
                 android:layout_height="@dimen/edit_habit_icon_extended_height"
-                android:src="@drawable/edit_habit_priority_icon"
+                android:src="@drawable/ic_sort"
                 android:layout_marginEnd="@dimen/edit_habit_icon_margin"
                 android:contentDescription="@string/edit_habit_priority_section_icon" />
 
@@ -144,7 +144,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/spinner_drop_down_arrow"
+                    android:src="@drawable/ic_drop_down_arrow"
                     android:contentDescription="@string/edit_habit_arrow_drop_down_icon" />
 
             </LinearLayout>
@@ -167,7 +167,7 @@
             <ImageView
                 android:layout_width="@dimen/edit_habit_icon_width"
                 android:layout_height="@dimen/edit_habit_icon_extended_height"
-                android:src="@drawable/repeat_icon"
+                android:src="@drawable/ic_rounded_arrow"
                 android:layout_marginEnd="@dimen/edit_habit_icon_margin"
                 android:contentDescription="@string/edit_habit_repeat_icon" />
 
@@ -220,7 +220,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:src="@drawable/spinner_drop_down_arrow"
+                        android:src="@drawable/ic_drop_down_arrow"
                         android:contentDescription="@string/edit_habit_arrow_drop_down_icon" />
                 </LinearLayout>
             </LinearLayout>
@@ -239,7 +239,7 @@
             android:layout_marginHorizontal="@dimen/edit_habit_horizontal_margin"
             android:textAppearance="@style/Text.MainText"
             android:text="@string/edit_habit_color_default_value"
-            app:drawableLeftCompat="@drawable/edit_habit_color_icon_with_margin"/>
+            app:drawableLeftCompat="@drawable/edit_habit_selected_color_with_margin"/>
 
         <View
             android:layout_width="match_parent"
@@ -257,7 +257,7 @@
             <ImageView
                 android:layout_width="@dimen/edit_habit_icon_width"
                 android:layout_height="@dimen/edit_habit_icon_default_height"
-                android:src="@drawable/edit_habit_description_icon"
+                android:src="@drawable/ic_text"
                 android:layout_marginEnd="@dimen/edit_habit_icon_margin"
                 android:contentDescription="@string/edit_habit_description_icon" />
 

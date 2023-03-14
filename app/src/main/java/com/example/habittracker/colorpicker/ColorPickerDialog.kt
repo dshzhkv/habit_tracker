@@ -1,8 +1,10 @@
-package com.example.habittracker
+package com.example.habittracker.colorpicker
 
 import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.ContextThemeWrapper
@@ -13,6 +15,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.setMargins
+import com.example.habittracker.R
+import com.example.habittracker.toHex
+import com.example.habittracker.toHsv
+import com.example.habittracker.toRgb
 import com.google.android.material.button.MaterialButton
 
 
@@ -45,13 +51,14 @@ class ColorPickerDialog(private val context: Context, private val defaultColorId
     private var hsvValue: TextView? = null
     private var hexValue: TextView? = null
 
-    var selectedColorId: Int = defaultColorId
+    private var selectedColorId: Int = defaultColorId
 
-    var onSaveColorListener: OnSaveColorListener? = null
+    private var onSaveColorListener: OnSaveColorListener? = null
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         onSaveColorListener = context as OnSaveColorListener
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,9 +139,5 @@ class ColorPickerDialog(private val context: Context, private val defaultColorId
             onSaveColorListener?.setSelectedColor(selectedColorId)
             dismiss()
         }
-    }
-
-    interface OnSaveColorListener {
-        fun setSelectedColor(colorId: Int)
     }
 }

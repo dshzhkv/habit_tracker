@@ -30,7 +30,8 @@
             android:layout_marginHorizontal="@dimen/main_activity_habit_list_margin"
             android:paddingVertical="@dimen/main_activity_habit_list_margin"
             android:clipToPadding="false"
-            tools:listitem="@layout/habit_card" />
+            tools:listitem="@layout/habit_card"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_habit_button"
@@ -41,7 +42,7 @@
             android:layout_margin="@dimen/main_activity_button_margin"
             app:shapeAppearanceOverlay="@style/AddHabitButtonShape"
             app:backgroundTint="@color/dark_blue"
-            android:src="@drawable/add_icon"
+            android:src="@drawable/ic_plus"
             app:tint="@color/white"
             android:contentDescription="@string/main_activity_add_habit_button" />
 

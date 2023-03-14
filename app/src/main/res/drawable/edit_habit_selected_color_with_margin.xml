@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/edit_habit_color_icon"
+    android:drawable="@drawable/edit_habit_selected_color"
     android:insetRight="@dimen/edit_habit_icon_margin"/>

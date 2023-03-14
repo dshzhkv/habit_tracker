@@ -5,13 +5,17 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.habittracker.entities.Habit
+import com.example.habittracker.habitadapter.HabitAdapter
+import com.example.habittracker.habitadapter.OnHabitCardListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : AppCompatActivity(), HabitAdapter.OnHabitCardListener {
+class MainActivity : AppCompatActivity(), OnHabitCardListener {
 
     private var noHabitsMessage: TextView? = null
+
+    private var habitAdapter: HabitAdapter? = null
 
     companion object {
         var fakeHabits: MutableList<Habit> = mutableListOf()
@@ -22,6 +26,7 @@ class MainActivity : AppCompatActivity(), HabitAdapter.OnHabitCardListener {
         setContentView(R.layout.activity_main)
 
         noHabitsMessage = findViewById(R.id.no_habits_message)
+        habitAdapter = HabitAdapter(fakeHabits, applicationContext, this)
 
         setListenerOnAddHabitButton()
     }
@@ -29,19 +34,18 @@ class MainActivity : AppCompatActivity(), HabitAdapter.OnHabitCardListener {
     override fun onStart() {
         super.onStart()
 
-
         if (fakeHabits.size == 0) {
             noHabitsMessage?.visibility = View.VISIBLE
         } else {
             noHabitsMessage?.visibility = View.GONE
         }
+
         setupRecyclerView()
     }
 
     private fun setupRecyclerView() {
         val recyclerView: RecyclerView = findViewById(R.id.habits_list)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = HabitAdapter(fakeHabits, applicationContext, this)
+        recyclerView.adapter = habitAdapter
     }
 
     private fun setListenerOnAddHabitButton() {
@@ -56,7 +60,8 @@ class MainActivity : AppCompatActivity(), HabitAdapter.OnHabitCardListener {
         val intent = Intent(this, EditHabitActivity::class.java)
             .apply {
                 putExtra(getString(R.string.intent_extra_habit_position), position)
-                putExtra(getString(R.string.intent_extra_habit), fakeHabits[position]) }
+                putExtra(getString(R.string.intent_extra_habit), fakeHabits[position])
+            }
         startActivity(intent)
     }
 }
