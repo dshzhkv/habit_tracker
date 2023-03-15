@@ -18,11 +18,6 @@ class PriorityAdapter(
 
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
-//    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-//        val itemView = layoutInflater.inflate(R.layout.priority_spinner_layout, null, true)
-//        return setupView(itemView, position)
-//    }
-
     @SuppressLint("InflateParams", "ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val itemView = layoutInflater.inflate(R.layout.priority_spinner_layout, null, true)
