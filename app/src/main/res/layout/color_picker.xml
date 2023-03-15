@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/color_picker_background"
+    android:layout_margin="@dimen/edit_habit_horizontal_margin">
+
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/color_picker_margin"
+        android:padding="@dimen/color_picker_button_margin"
+        android:clipToPadding="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/color_palette"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"/>
+
+    </HorizontalScrollView>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/color_picker_margin"
+        android:layout_marginBottom="@dimen/color_picker_margin">
+
+        <ImageView
+            android:id="@+id/selected_color"
+            android:layout_width="@dimen/color_picker_button_size"
+            android:layout_height="@dimen/color_picker_button_size"
+            android:src="@drawable/color_picker_selected_color"
+            android:contentDescription="@string/color_picker_selected_color"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="@dimen/color_picker_color_headers_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/color_picker_rgb"
+                android:textAppearance="@style/Text.MainText"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/color_picker_hsv"
+                android:textAppearance="@style/Text.MainText"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/color_picker_hex"
+                android:textAppearance="@style/Text.MainText"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/rgb_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Text.MainText.Bold"/>
+
+            <TextView
+                android:id="@+id/hsv_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Text.MainText.Bold"/>
+
+            <TextView
+                android:id="@+id/hex_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Text.MainText.Bold"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/default_color_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/color_picker_default_color_button"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:textColor="@color/dark_blue"
+        android:background="@android:color/transparent"
+        android:padding="0dp"
+        android:layout_marginStart="@dimen/color_picker_margin"
+        android:textAlignment="viewStart"
+        android:textAppearance="@style/Text.SmallText" />
+
+    <Button
+        android:id="@+id/save_color_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/color_picker_save_button"
+        android:layout_marginStart="@dimen/color_picker_margin"
+        android:layout_marginBottom="@dimen/color_picker_margin"
+        android:textAppearance="@style/Text.SmallText"/>
+
+
+</LinearLayout>

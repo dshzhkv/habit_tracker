@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="dark_blue">#2963A9</color>
+    <color name="light_blue">#3A7DCF</color>
+    <color name="light_grey">#EDEDED</color>
+    <color name="medium_grey">#454447</color>
+    <color name="dark_grey">#27262C</color>
+    <color name="almost_black">#1C1B1F</color>
+
+    <color name="red">#BB4430</color>
+    <color name="yellow">#E9C46A</color>
+    <color name="green">#2A9D8F</color>
+
+    <color name="default_color">#2963A9</color>
+    <color name="gradient_color1">#2963A9</color>
+    <color name="gradient_color2">#2973A1</color>
+    <color name="gradient_color3">#297E9D</color>
+    <color name="gradient_color4">#2A8998</color>
+    <color name="gradient_color5">#2A9493</color>
+    <color name="gradient_color6">#2F9E8E</color>
+    <color name="gradient_color7">#52A587</color>
+    <color name="gradient_color8">#76AC80</color>
+    <color name="gradient_color9">#9BB479</color>
+    <color name="gradient_color10">#BEBB72</color>
+    <color name="gradient_color11">#E1C26B</color>
+    <color name="gradient_color12">#E2B161</color>
+    <color name="gradient_color13">#DA9A57</color>
+    <color name="gradient_color14">#D2844D</color>
+    <color name="gradient_color15">#CA6D42</color>
+    <color name="gradient_color16">#C05437</color>
+
 </resources>

@@ -1,3 +1,56 @@
 <resources>
     <string name="app_name">Habit Tracker</string>
+
+    <string name="main_activity_no_habits">У вас ещё нет привычек</string>
+    <string name="main_activity_add_habit_button">Добавить привычку</string>
+
+    <string name="habit_card_repeat_icon">Иконка повторения</string>
+
+    <string name="high_priority">Очень важно</string>
+    <string name="medium_priority">Достаточно важно</string>
+    <string name="low_priority">Не очень важно</string>
+
+    <string name="bad_habit">Вредная</string>
+    <string name="good_habit">Полезная</string>
+
+    <string name="day">день</string>
+    <string name="week">неделю</string>
+    <string name="month">месяц</string>
+    <string name="quarter">квартал</string>
+    <string name="year">год</string>
+    <string name="never">Никогда</string>
+    <string name="every_day">Ежедневно</string>
+    
+    <plurals name="times">
+        <item quantity="zero">раз в</item>
+        <item quantity="one">раз в</item>
+        <item quantity="many">раз в</item>
+        <item quantity="few">раза в</item>
+    </plurals>
+
+    <string name="edit_habit_exit_button">Отменить</string>
+    <string name="edit_habit_save_button">Сохранить</string>
+    <string name="edit_habit_title_hint">Название</string>
+    <string name="edit_habit_title_required">Обязательное поле</string>
+    <string name="edit_habit_type_section_icon">Иконка большие пальцы вверх и вниз</string>
+    <string name="edit_habit_priority_section_icon">Иконка приоритеты</string>
+    <string name="edit_habit_repeat_icon">Иконка повторения</string>
+    <string name="edit_habit_arrow_drop_down_icon">Иконка стрелка вниз</string>
+    <string name="edit_habit_repeat_text">Повторять</string>
+    <string name="edit_habit_allowed_text">Допускается</string>
+    <string name="edit_habit_repeat_times_default_value">1</string>
+    <string name="edit_habit_times_default_value">раз в</string>
+    <string name="edit_habit_color_default_value">Цвет по умолчанию</string>
+    <string name="edit_habit_description_icon">Иконка описания</string>
+    <string name="edit_habit_description_hint">Добавьте описание</string>
+
+    <string name="color_picker_selected_color">Выбранный цвет</string>
+    <string name="color_picker_rgb">RGB</string>
+    <string name="color_picker_hsv">HSV</string>
+    <string name="color_picker_hex">HEX</string>
+    <string name="color_picker_default_color_button">Вернуться к цвету по умолчанию</string>
+    <string name="color_picker_save_button">Сохранить</string>
+
+    <string name="intent_extra_habit">habit</string>
+    <string name="intent_extra_habit_position">position</string>
 </resources>
