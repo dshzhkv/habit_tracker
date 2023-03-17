@@ -11,9 +11,10 @@ import com.example.habittracker.entities.Habit
 import com.example.habittracker.entities.HabitPriority
 import com.example.habittracker.entities.HabitType
 import com.example.habittracker.entities.Period
+import com.example.habittracker.fragments.habitslist.OnHabitCardListener
 
 class HabitViewHolder(itemView: View,
-                      private val onHabitCardListener: OnHabitCardListener,
+                      private val onHabitCardListener: OnHabitCardListener?,
                       private val context: Context)
     : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
@@ -30,7 +31,7 @@ class HabitViewHolder(itemView: View,
     }
 
     override fun onClick(view: View?) {
-        onHabitCardListener.onHabitCardClick(adapterPosition)
+        onHabitCardListener?.onHabitCardClick(adapterPosition)
     }
 
     fun bind(habit: Habit) {

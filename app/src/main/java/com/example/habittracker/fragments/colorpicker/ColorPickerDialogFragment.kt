@@ -1,29 +1,31 @@
-package com.example.habittracker.colorpicker
+package com.example.habittracker.fragments.colorpicker
 
-import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.view.ContextThemeWrapper
-import android.view.Window
+import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.setMargins
+import androidx.fragment.app.DialogFragment
 import com.example.habittracker.R
+import com.example.habittracker.fragments.edithabit.BUNDLE_KEY
+import com.example.habittracker.fragments.edithabit.REQUEST_KEY
 import com.example.habittracker.toHex
 import com.example.habittracker.toHsv
 import com.example.habittracker.toRgb
 import com.google.android.material.button.MaterialButton
 
+private const val ARG_DEFAULT_COLOR_ID = "default_color_id"
 
-class ColorPickerDialog(private val context: Context, private val defaultColorId: Int)
-    : Dialog(context) {
+class ColorPickerDialogFragment : DialogFragment() {
 
     private val gradientColorsIds: IntArray = intArrayOf(
         R.color.gradient_color1,
@@ -51,33 +53,52 @@ class ColorPickerDialog(private val context: Context, private val defaultColorId
     private var hsvValue: TextView? = null
     private var hexValue: TextView? = null
 
-    private var selectedColorId: Int = defaultColorId
+    private var selectedColorId: Int = R.color.default_color
 
-    private var onSaveColorListener: OnSaveColorListener? = null
+    private lateinit var context: Context
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        onSaveColorListener = context as OnSaveColorListener
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    companion object {
+        fun newInstance(defaultColorId: Int) =
+            ColorPickerDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(ARG_DEFAULT_COLOR_ID, defaultColorId)
+                }
+            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.color_picker)
+        arguments?.let {
+            selectedColorId = it.getInt(ARG_DEFAULT_COLOR_ID)
+        }
+    }
 
-        colorPalette = findViewById(R.id.color_palette)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        return inflater.inflate(R.layout.fragment_color_picker, container, false)
+    }
 
-        selectedColorImage = findViewById(R.id.selected_color)
-        rgbValue = findViewById(R.id.rgb_value)
-        hsvValue = findViewById(R.id.hsv_value)
-        hexValue = findViewById(R.id.hex_value)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        context = activity as Context
+
+        colorPalette = view.findViewById(R.id.color_palette)
+
+        selectedColorImage = view.findViewById(R.id.selected_color)
+        rgbValue = view.findViewById(R.id.rgb_value)
+        hsvValue = view.findViewById(R.id.hsv_value)
+        hexValue = view.findViewById(R.id.hex_value)
 
         setGradientBackground()
         createButtons()
-        setSelectedColorValues(defaultColorId)
-        setListenerOnDefaultColorButton()
-        setListenerOnSaveButton()
+        setSelectedColorValues(selectedColorId)
+        setListenerOnDefaultColorButton(view)
+        setListenerOnSaveButton(view)
     }
 
     private fun setGradientBackground() {
@@ -126,17 +147,19 @@ class ColorPickerDialog(private val context: Context, private val defaultColorId
         hexValue?.text = colorValue.toHex()
     }
 
-    private fun setListenerOnDefaultColorButton() {
-        val defaultColorButton: Button = findViewById(R.id.default_color_button)
+    private fun setListenerOnDefaultColorButton(view: View) {
+        val defaultColorButton: Button = view.findViewById(R.id.default_color_button)
         defaultColorButton.setOnClickListener {
             setSelectedColorValues(R.color.default_color)
         }
     }
 
-    private fun setListenerOnSaveButton() {
-        val saveButton: Button = findViewById(R.id.save_color_button)
+    private fun setListenerOnSaveButton(view: View) {
+        val saveButton: Button = view.findViewById(R.id.save_color_button)
         saveButton.setOnClickListener {
-            onSaveColorListener?.setSelectedColor(selectedColorId)
+            parentFragmentManager.setFragmentResult(
+                REQUEST_KEY,
+                bundleOf(BUNDLE_KEY to selectedColorId))
             dismiss()
         }
     }

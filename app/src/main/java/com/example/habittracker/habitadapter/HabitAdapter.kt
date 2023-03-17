@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.habittracker.R
 import com.example.habittracker.entities.Habit
+import com.example.habittracker.fragments.habitslist.OnHabitCardListener
 
 class HabitAdapter(private val habits: List<Habit>,
                    private val context: Context,
-                   private val onHabitCardListener: OnHabitCardListener
+                   private val onHabitCardListener: OnHabitCardListener?
 )
     : ListAdapter<Habit, HabitViewHolder>(HabitDiffUtil()) {
 

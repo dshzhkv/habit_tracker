@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Habit Tracker</string>
 
-    <string name="main_activity_add_habit_button">Add Habit</string>
+    <string name="habits_list_no_habits">You don\'t have any habits yet</string>
+    <string name="habits_list_add_habit_button">Add Habit</string>
 
     <string name="habit_card_repeat_icon">Repeat icon</string>
 
@@ -47,8 +48,4 @@
     <string name="color_picker_hex">HEX</string>
     <string name="color_picker_default_color_button">Back to default color</string>
     <string name="color_picker_save_button">Save</string>
-
-    <string name="intent_extra_habit">habit</string>
-    <string name="intent_extra_habit_position">position</string>
-    <string name="main_activity_no_habits">You don\'t have any habits yet</string>
 </resources>
