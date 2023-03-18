@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.habittracker.entities.Habit
 import com.example.habittracker.fragments.edithabit.EditHabitFragment
 import com.example.habittracker.fragments.edithabit.OnEditHabitFragmentListener
-import com.example.habittracker.fragments.habitslist.HabitsListFragment
 import com.example.habittracker.fragments.habitslist.OnAddHabitButtonListener
 import com.example.habittracker.fragments.habitslist.OnHabitCardListener
+import com.example.habittracker.fragments.main.MainFragment
 
 class MainActivity : AppCompatActivity(), OnHabitCardListener, OnAddHabitButtonListener,
     OnEditHabitFragmentListener {
@@ -23,9 +23,15 @@ class MainActivity : AppCompatActivity(), OnHabitCardListener, OnAddHabitButtonL
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .add(R.id.root_layout, HabitsListFragment.newInstance())
+                .add(R.id.root_layout, MainFragment.newInstance())
                 .commit()
         }
+//        if (savedInstanceState == null) {
+//            supportFragmentManager
+//                .beginTransaction()
+//                .add(R.id.root_layout, HabitsListFragment.newInstance())
+//                .commit()
+//        }
     }
 
     override fun onHabitCardClick(position: Int) {
@@ -55,7 +61,7 @@ class MainActivity : AppCompatActivity(), OnHabitCardListener, OnAddHabitButtonL
             supportFragmentManager
                 .beginTransaction()
                 .remove(editHabitFragment)
-                .add(R.id.root_layout, HabitsListFragment.newInstance())
+                .add(R.id.root_layout, MainFragment.newInstance())
                 .commit()
 
             supportActionBar?.show()
@@ -69,7 +75,7 @@ class MainActivity : AppCompatActivity(), OnHabitCardListener, OnAddHabitButtonL
             supportFragmentManager
                 .beginTransaction()
                 .remove(editHabitFragment)
-                .add(R.id.root_layout, HabitsListFragment.newInstance())
+                .add(R.id.root_layout, MainFragment.newInstance())
                 .commit()
 
             supportActionBar?.show()

@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">Habit Tracker</string>
 
-    <string name="habits_list_no_habits">You don\'t have any habits yet</string>
+    <string name="habits_list_no_bad_habits">You don\'t have any bad habits yet</string>
+    <string name="habits_list_no_good_habits">You don\'t have any good habits yet</string>
     <string name="habits_list_add_habit_button">Add Habit</string>
+    <string name="bad_habits_title">Bad</string>
+    <string name="good_habits_title">Good</string>
 
     <string name="habit_card_repeat_icon">Repeat icon</string>
 

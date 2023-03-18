@@ -12,7 +12,6 @@
         android:id="@+id/no_habits_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/habits_list_no_habits"
         android:textAppearance="@style/Text.MainText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,19 +32,6 @@
         android:clipToPadding="false"
         tools:listitem="@layout/habit_card"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_habit_button"
-        android:layout_width="@dimen/habits_list_button_size"
-        android:layout_height="@dimen/habits_list_button_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="@dimen/habits_list_button_margin"
-        app:shapeAppearanceOverlay="@style/AddHabitButtonShape"
-        app:backgroundTint="@color/dark_blue"
-        android:src="@drawable/ic_plus"
-        app:tint="@color/white"
-        android:contentDescription="@string/habits_list_add_habit_button" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

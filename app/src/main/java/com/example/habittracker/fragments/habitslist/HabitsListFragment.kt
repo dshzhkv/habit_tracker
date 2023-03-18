@@ -9,30 +9,47 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.habittracker.MainActivity
 import com.example.habittracker.R
 import com.example.habittracker.entities.Habit
+import com.example.habittracker.entities.HabitType
+import com.example.habittracker.extensions.customGetSerializable
 import com.example.habittracker.habitadapter.HabitAdapter
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+
+private const val ARG_TYPE = "type"
 
 class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
     private var onHabitCardListener: OnHabitCardListener? = null
-    private var onAddHabitButtonListener: OnAddHabitButtonListener? = null
 
-    private var habits: MutableList<Habit> = mutableListOf()
+    private var type: HabitType = HabitType.GOOD
+    private var habits: List<Habit> = listOf()
 
     companion object {
-        fun newInstance() = HabitsListFragment()
+        fun newInstance(type: HabitType) = HabitsListFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(ARG_TYPE, type)
+            }
+        }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onHabitCardListener = context as OnHabitCardListener
-        onAddHabitButtonListener = context as OnAddHabitButtonListener
-        habits = MainActivity.fakeHabits
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            type = it.customGetSerializable(ARG_TYPE, HabitType::class.java) ?: HabitType.GOOD
+            habits = MainActivity.fakeHabits.filter { habit -> habit.type == type }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val noHabitsMessage: TextView = view.findViewById(R.id.no_habits_message)
+        noHabitsMessage.text = when (type) {
+            HabitType.GOOD -> getString(R.string.habits_list_no_good_habits)
+            HabitType.BAD -> getString(R.string.habits_list_no_bad_habits)
+        }
         if (habits.isEmpty()) {
             noHabitsMessage.visibility = View.VISIBLE
         } else {
@@ -42,14 +59,5 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
         val recyclerView: RecyclerView = view.findViewById(R.id.habits_list)
         val habitAdapter = HabitAdapter(habits, activity as Context, onHabitCardListener)
         recyclerView.adapter = habitAdapter
-
-        setListenerOnAddHabitButton(view)
-    }
-
-    private fun setListenerOnAddHabitButton(view: View) {
-        val addHabitButton: FloatingActionButton = view.findViewById(R.id.add_habit_button)
-        addHabitButton.setOnClickListener {
-            onAddHabitButtonListener?.onAddHabitButtonClick()
-        }
     }
 }

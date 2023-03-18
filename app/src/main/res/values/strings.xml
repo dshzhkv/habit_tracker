@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">Habit Tracker</string>
 
-    <string name="habits_list_no_habits">У вас ещё нет привычек</string>
+    <string name="habits_list_no_bad_habits">У вас ещё нет вредных привычек</string>
+    <string name="habits_list_no_good_habits">У вас ещё нет хороших привычек</string>
     <string name="habits_list_add_habit_button">Добавить привычку</string>
+    <string name="bad_habits_title">Вредные</string>
+    <string name="good_habits_title">Полезные</string>
 
     <string name="habit_card_repeat_icon">Иконка повторения</string>
 
