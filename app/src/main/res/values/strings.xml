@@ -1,5 +1,9 @@
 <resources>
-    <string name="app_name">Habit Tracker</string>
+    <string name="app_name">Трекер привычек</string>
+    <string name="app_name_with_line_break">Трекер \nпривычек</string>
+
+    <string name="label_main">Мои привычки</string>
+    <string name="label_about">О нас</string>
 
     <string name="habits_list_no_bad_habits">У вас ещё нет вредных привычек</string>
     <string name="habits_list_no_good_habits">У вас ещё нет хороших привычек</string>
@@ -53,4 +57,16 @@
     <string name="color_picker_hex">HEX</string>
     <string name="color_picker_default_color_button">Вернуться к цвету по умолчанию</string>
     <string name="color_picker_save_button">Сохранить</string>
+
+    <string name="about_app_good_habits">Следите за соблюдением полезных привычек</string>
+    <string name="about_app_bad_habits">и отказывайтесь от вредных</string>
+    <string name="about_app_the_end">вместе с нашим приложением!</string>
+
+    <string name="about_app_good_habit_title">Заниматься спортом</string>
+    <string name="about_app_good_habit_repeat_information">3 раза в неделю</string>
+    <string name="about_app_good_habit_description">В здоровом теле здоровый дух</string>
+
+    <string name="about_app_bad_habit_title">Не курить</string>
+    <string name="about_app_bad_habit_repeat_information">Никогда</string>
+    <string name="about_app_bad_habit_description" translatable="false">Курить - здоровью вредить</string>
 </resources>

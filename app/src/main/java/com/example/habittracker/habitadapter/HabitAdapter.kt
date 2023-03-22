@@ -3,14 +3,13 @@ package com.example.habittracker.habitadapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.ListAdapter
 import com.example.habittracker.R
 import com.example.habittracker.entities.Habit
-import com.example.habittracker.fragments.habitslist.OnHabitCardListener
-
 class HabitAdapter(private val habits: List<Habit>,
                    private val context: Context,
-                   private val onHabitCardListener: OnHabitCardListener?
+                   private val navController: NavController
 )
     : ListAdapter<Habit, HabitViewHolder>(HabitDiffUtil()) {
 
@@ -19,7 +18,7 @@ class HabitAdapter(private val habits: List<Habit>,
             R.layout.habit_card, parent,
             false
         )
-        return HabitViewHolder(itemView, onHabitCardListener, context)
+        return HabitViewHolder(itemView, context, navController)
     }
 
     override fun getItemCount(): Int {

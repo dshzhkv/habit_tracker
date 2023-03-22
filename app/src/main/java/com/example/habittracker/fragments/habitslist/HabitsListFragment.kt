@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.TextView
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habittracker.MainActivity
 import com.example.habittracker.R
@@ -16,7 +18,6 @@ import com.example.habittracker.habitadapter.HabitAdapter
 private const val ARG_TYPE = "type"
 
 class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
-    private var onHabitCardListener: OnHabitCardListener? = null
 
     private var type: HabitType = HabitType.GOOD
     private var habits: List<Habit> = listOf()
@@ -29,21 +30,13 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        onHabitCardListener = context as OnHabitCardListener
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         arguments?.let {
             type = it.customGetSerializable(ARG_TYPE, HabitType::class.java) ?: HabitType.GOOD
             habits = MainActivity.fakeHabits.filter { habit -> habit.type == type }
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         val noHabitsMessage: TextView = view.findViewById(R.id.no_habits_message)
         noHabitsMessage.text = when (type) {
@@ -57,7 +50,8 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
         }
 
         val recyclerView: RecyclerView = view.findViewById(R.id.habits_list)
-        val habitAdapter = HabitAdapter(habits, activity as Context, onHabitCardListener)
+        val navController: NavController = findNavController()
+        val habitAdapter = HabitAdapter(habits, activity as Context, navController)
         recyclerView.adapter = habitAdapter
     }
 }

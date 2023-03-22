@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about_app_good_habits"
+        android:textAppearance="@style/Text.MainText"
+        android:textAlignment="center"/>
+
+    <include
+        layout="@layout/habit_card"
+        android:id="@+id/good_habit_example"
+        android:layout_width="361dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about_app_bad_habits"
+        android:textAppearance="@style/Text.MainText"
+        android:textAlignment="center" />
+
+    <include
+        android:id="@+id/bad_habit_example"
+        layout="@layout/habit_card"
+        android:layout_width="361dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="10dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about_app_the_end"
+        android:textAppearance="@style/Text.MainText"
+        android:textAlignment="center" />
+
+</LinearLayout>

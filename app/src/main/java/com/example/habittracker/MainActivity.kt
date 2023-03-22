@@ -2,15 +2,22 @@ package com.example.habittracker
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.habittracker.entities.Habit
-import com.example.habittracker.fragments.edithabit.EditHabitFragment
-import com.example.habittracker.fragments.edithabit.OnEditHabitFragmentListener
-import com.example.habittracker.fragments.habitslist.OnAddHabitButtonListener
-import com.example.habittracker.fragments.habitslist.OnHabitCardListener
-import com.example.habittracker.fragments.main.MainFragment
+import com.google.android.material.navigation.NavigationView
 
-class MainActivity : AppCompatActivity(), OnHabitCardListener, OnAddHabitButtonListener,
-    OnEditHabitFragmentListener {
+class MainActivity : AppCompatActivity(){
+
+    private lateinit var navHostFragment: NavHostFragment
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     companion object {
         var fakeHabits: MutableList<Habit> = mutableListOf()
@@ -20,65 +27,31 @@ class MainActivity : AppCompatActivity(), OnHabitCardListener, OnAddHabitButtonL
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (savedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .add(R.id.root_layout, MainFragment.newInstance())
-                .commit()
-        }
-//        if (savedInstanceState == null) {
-//            supportFragmentManager
-//                .beginTransaction()
-//                .add(R.id.root_layout, HabitsListFragment.newInstance())
-//                .commit()
-//        }
-    }
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
-    override fun onHabitCardClick(position: Int) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.root_layout, EditHabitFragment.newInstance(fakeHabits[position], position), EditHabitFragment::class.java.name)
-            .addToBackStack(null)
-            .commit()
+        navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.my_nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
 
-        supportActionBar?.hide()
-    }
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        navigationView.setupWithNavController(navController)
 
-    override fun onAddHabitButtonClick() {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.root_layout, EditHabitFragment.newInstance(), EditHabitFragment::class.java.name)
-            .addToBackStack(null)
-            .commit()
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
 
-        supportActionBar?.hide()
-    }
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.mainFragment, R.id.aboutAppFragment), drawerLayout)
 
-    override fun onCloseButtonClick() {
-        val editHabitFragment = supportFragmentManager.findFragmentByTag(EditHabitFragment::class.java.name)
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
-        if (editHabitFragment != null) {
-            supportFragmentManager
-                .beginTransaction()
-                .remove(editHabitFragment)
-                .add(R.id.root_layout, MainFragment.newInstance())
-                .commit()
+        navController.addOnDestinationChangedListener { _, destination, _ ->
 
-            supportActionBar?.show()
+            if (destination.id == R.id.editHabitFragment) {
+                supportActionBar?.hide()
+            } else {
+                supportActionBar?.show()
+            }
         }
     }
 
-    override fun onSaveButtonClick() {
-        val editHabitFragment = supportFragmentManager.findFragmentByTag(EditHabitFragment::class.java.name)
-
-        if (editHabitFragment != null) {
-            supportFragmentManager
-                .beginTransaction()
-                .remove(editHabitFragment)
-                .add(R.id.root_layout, MainFragment.newInstance())
-                .commit()
-
-            supportActionBar?.show()
-        }
-    }
+    override fun onSupportNavigateUp() = navController.navigateUp(appBarConfiguration)
 }

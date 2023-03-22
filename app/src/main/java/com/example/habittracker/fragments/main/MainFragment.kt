@@ -4,11 +4,11 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.example.habittracker.fragments.habitslist.HabitsListAdapter
 import com.example.habittracker.R
 import com.example.habittracker.entities.HabitType
-import com.example.habittracker.fragments.habitslist.OnAddHabitButtonListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -16,27 +16,20 @@ import com.google.android.material.tabs.TabLayoutMediator
 class MainFragment : Fragment(R.layout.fragment_main) {
 
     private var habitsListAdapter: HabitsListAdapter? = null
-    private var onAddHabitButtonListener: OnAddHabitButtonListener? = null
-
-    companion object {
-        fun newInstance() = MainFragment()
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        onAddHabitButtonListener = context as OnAddHabitButtonListener
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        habitsListAdapter = HabitsListAdapter(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val viewPager: ViewPager2 = view.findViewById(R.id.type_habits_list)
+        habitsListAdapter = HabitsListAdapter(this)
         viewPager.adapter = habitsListAdapter
 
         val tabLayout: TabLayout = view.findViewById(R.id.type_tabs)
@@ -54,7 +47,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private fun setListenerOnAddHabitButton(view: View) {
         val addHabitButton: FloatingActionButton = view.findViewById(R.id.add_habit_button)
         addHabitButton.setOnClickListener {
-            onAddHabitButtonListener?.onAddHabitButtonClick()
+            findNavController().navigate(R.id.action_mainFragment_to_editHabitFragment)
         }
     }
 }

@@ -82,7 +82,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/habit_card_section_margin"
                 android:layout_marginVertical="@dimen/habit_card_description_section_items_margin"
-                android:textAppearance="@style/Text.SmallText"/>
+                android:textAppearance="@style/Text.SmallText"
+                tools:text="Описание"/>
 
         </LinearLayout>
 

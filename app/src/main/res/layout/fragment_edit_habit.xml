@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="?attr/background">
 
     <LinearLayout
@@ -38,31 +38,33 @@
                 android:textColor="@color/dark_blue"
                 android:text="@string/edit_habit_save_button"
                 android:textAppearance="@style/Text.MainText.Bold"
+                android:padding="0dp"
                 style="@style/Widget.MaterialComponents.Button.UnelevatedButton"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <EditText
-            android:id="@+id/title_edit_text"
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/habit_title_TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/Text.LargeText"
-            android:layout_marginBottom="@dimen/edit_habit_section_vertical_margin"
             android:layout_marginStart="@dimen/edit_habit_no_icon_section_start_margin"
             android:layout_marginEnd="@dimen/edit_habit_horizontal_margin"
-            android:hint="@string/edit_habit_title_hint"
-            android:inputType="text"
-            android:background="@null"
-            android:importantForAutofill="no" />
+            app:boxBackgroundMode="none"
+            app:errorEnabled="true"
+            android:background="@android:color/transparent">
 
-        <TextView
-            android:id="@+id/title_is_required_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/edit_habit_no_icon_section_start_margin"
-            android:text="@string/edit_habit_title_required"
-            android:textColor="@color/red"
-            android:textAppearance="@style/Text.ExtraSmallText"
-            android:visibility="gone"/>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/habit_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="@style/Text.LargeText"
+                android:inputType="text"
+                android:importantForAutofill="no"
+                android:background="@android:color/transparent"
+                android:hint="@string/edit_habit_title_hint"
+                app:hintTextAppearance="@style/Text.LargeText" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <View
             android:layout_width="match_parent"
@@ -85,7 +87,7 @@
                 android:contentDescription="@string/edit_habit_type_section_icon" />
 
             <RadioGroup
-                android:id="@+id/type_radio_group"
+                android:id="@+id/type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checkedButton="@id/good_habit_button">
@@ -131,7 +133,7 @@
                 android:orientation="horizontal">
 
                 <Spinner
-                    android:id="@+id/priority_spinner"
+                    android:id="@+id/priority"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
@@ -183,7 +185,7 @@
                     android:textAppearance="@style/Text.MainText"/>
 
                 <EditText
-                    android:id="@+id/repetition_times_edit_text"
+                    android:id="@+id/repetition_times"
                     android:layout_width="@dimen/edit_habit_input_size"
                     android:layout_height="@dimen/edit_habit_input_size"
                     android:inputType="number"
@@ -192,7 +194,8 @@
                     android:textAlignment="center"
                     android:background="@drawable/spinner_border"
                     android:layout_marginHorizontal="@dimen/edit_habit_repeat_inputs_margin"
-                    android:importantForAutofill="no"/>
+                    android:importantForAutofill="no"
+                    android:hint="@string/edit_habit_repeat_times_default_value"/>
 
                 <TextView
                     android:id="@+id/repeat_times"
@@ -209,7 +212,7 @@
                     android:layout_marginHorizontal="@dimen/edit_habit_repeat_inputs_margin">
 
                     <Spinner
-                        android:id="@+id/repetition_period_spinner"
+                        android:id="@+id/repetition_period"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
@@ -261,7 +264,7 @@
                 android:contentDescription="@string/edit_habit_description_icon" />
 
             <EditText
-                android:id="@+id/description_edit_text"
+                android:id="@+id/description_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/edit_habit_description_hint"
