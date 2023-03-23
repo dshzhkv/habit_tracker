@@ -3,9 +3,7 @@ package com.example.habittracker.fragments.edithabit
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import androidx.core.widget.TextViewCompat
 import androidx.core.widget.doAfterTextChanged
@@ -30,7 +28,7 @@ const val REQUEST_KEY = "setSelectedColorRequest"
 const val BUNDLE_KEY = "selectedColorId"
 
 
-class EditHabitFragment : Fragment() {
+class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
 
     private var habit: Habit? = null
     private var habitPosition: Int = -1
@@ -53,14 +51,6 @@ class EditHabitFragment : Fragment() {
             habit = it.customGetSerializable(ARG_HABIT, Habit::class.java)
             habitPosition = it.getInt(ARG_HABIT_POSITION)
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_edit_habit, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -182,9 +172,9 @@ class EditHabitFragment : Fragment() {
             if (isInputCorrect()) {
                 val newHabit = parseInput()
                 if (shouldEdit()) {
-                    MainActivity.fakeHabits[habitPosition] = newHabit
+                    editHabit(newHabit)
                 } else {
-                    MainActivity.fakeHabits.add(newHabit)
+                    createHabit(newHabit)
                 }
                 findNavController().popBackStack()
             } else {
@@ -193,10 +183,26 @@ class EditHabitFragment : Fragment() {
         }
     }
 
+    private fun editHabit(newHabit: Habit) {
+        if (newHabit.type == habit?.type) {
+            val habits = MainActivity.fakeHabits[newHabit.type]
+            if (habits != null) {
+                habits[habitPosition] = newHabit
+            }
+        } else {
+            MainActivity.fakeHabits[habit?.type]?.remove(habit)
+            createHabit(newHabit)
+        }
+    }
+
+    private fun createHabit(newHabit: Habit) {
+        MainActivity.fakeHabits[newHabit.type]?.add(newHabit)
+    }
+
     private fun isInputCorrect(): Boolean = title?.text.toString().isNotEmpty()
 
     private fun shouldEdit(): Boolean =
-        habitPosition >= 0 && habitPosition < MainActivity.fakeHabits.size
+        habitPosition >= 0
 
     private fun parseInput(): Habit {
         val title: String = title?.text.toString()

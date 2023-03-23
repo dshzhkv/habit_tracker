@@ -11,6 +11,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.habittracker.entities.Habit
+import com.example.habittracker.entities.HabitType
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(){
@@ -20,7 +21,8 @@ class MainActivity : AppCompatActivity(){
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     companion object {
-        var fakeHabits: MutableList<Habit> = mutableListOf()
+        var fakeHabits: MutableMap<HabitType, MutableList<Habit>> =
+            mutableMapOf(HabitType.GOOD to mutableListOf(), HabitType.BAD to mutableListOf())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,13 +40,10 @@ class MainActivity : AppCompatActivity(){
         navigationView.setupWithNavController(navController)
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-
-        appBarConfiguration = AppBarConfiguration(setOf(R.id.mainFragment, R.id.aboutAppFragment), drawerLayout)
-
+        appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-
             if (destination.id == R.id.editHabitFragment) {
                 supportActionBar?.hide()
             } else {

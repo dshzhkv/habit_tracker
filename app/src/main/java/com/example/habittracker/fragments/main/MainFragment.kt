@@ -1,6 +1,5 @@
 package com.example.habittracker.fragments.main
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -16,14 +15,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 class MainFragment : Fragment(R.layout.fragment_main) {
 
     private var habitsListAdapter: HabitsListAdapter? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

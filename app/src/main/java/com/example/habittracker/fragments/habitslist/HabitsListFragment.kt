@@ -35,7 +35,7 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
 
         arguments?.let {
             type = it.customGetSerializable(ARG_TYPE, HabitType::class.java) ?: HabitType.GOOD
-            habits = MainActivity.fakeHabits.filter { habit -> habit.type == type }
+            habits = MainActivity.fakeHabits[type] ?: listOf()
         }
 
         val noHabitsMessage: TextView = view.findViewById(R.id.no_habits_message)
@@ -51,7 +51,7 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
 
         val recyclerView: RecyclerView = view.findViewById(R.id.habits_list)
         val navController: NavController = findNavController()
-        val habitAdapter = HabitAdapter(habits, activity as Context, navController)
+        val habitAdapter = HabitAdapter(habits, type, activity as Context, navController)
         recyclerView.adapter = habitAdapter
     }
 }

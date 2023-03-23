@@ -7,7 +7,10 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.ListAdapter
 import com.example.habittracker.R
 import com.example.habittracker.entities.Habit
+import com.example.habittracker.entities.HabitType
+
 class HabitAdapter(private val habits: List<Habit>,
+                   private val type: HabitType,
                    private val context: Context,
                    private val navController: NavController
 )
@@ -18,7 +21,7 @@ class HabitAdapter(private val habits: List<Habit>,
             R.layout.habit_card, parent,
             false
         )
-        return HabitViewHolder(itemView, context, navController)
+        return HabitViewHolder(itemView, context, navController, type)
     }
 
     override fun getItemCount(): Int {

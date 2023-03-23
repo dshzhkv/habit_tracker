@@ -16,9 +16,11 @@ import com.example.habittracker.entities.HabitType
 import com.example.habittracker.entities.Period
 import com.example.habittracker.fragments.edithabit.ARG_HABIT
 import com.example.habittracker.fragments.edithabit.ARG_HABIT_POSITION
+
+
 class HabitViewHolder(itemView: View,
                       private val context: Context,
-private val navController: NavController)
+                      private val navController: NavController, private val habitType: HabitType)
     : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
     private val title: TextView = itemView.findViewById(R.id.title)
@@ -34,7 +36,8 @@ private val navController: NavController)
     }
 
     override fun onClick(view: View?) {
-        val bundle = bundleOf(ARG_HABIT_POSITION to adapterPosition, ARG_HABIT to MainActivity.fakeHabits[adapterPosition])
+        val bundle = bundleOf(ARG_HABIT_POSITION to adapterPosition,
+            ARG_HABIT to MainActivity.fakeHabits[habitType]!![adapterPosition])
         navController.navigate(R.id.action_mainFragment_to_editHabitFragment, bundle)
     }
 
