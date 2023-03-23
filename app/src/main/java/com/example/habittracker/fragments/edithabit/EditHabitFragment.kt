@@ -202,7 +202,7 @@ class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
     private fun isInputCorrect(): Boolean = title?.text.toString().isNotEmpty()
 
     private fun shouldEdit(): Boolean =
-        habitPosition >= 0
+        habitPosition >= 0 && habit != null
 
     private fun parseInput(): Habit {
         val title: String = title?.text.toString()

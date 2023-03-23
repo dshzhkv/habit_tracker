@@ -38,7 +38,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private fun setListenerOnAddHabitButton(view: View) {
         val addHabitButton: FloatingActionButton = view.findViewById(R.id.add_habit_button)
         addHabitButton.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_editHabitFragment)
+            findNavController().navigate(MainFragmentDirections.actionMainFragmentToEditHabitFragment())
         }
     }
 }
