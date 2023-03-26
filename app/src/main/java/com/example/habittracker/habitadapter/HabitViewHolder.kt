@@ -5,16 +5,20 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.habittracker.MainActivity
 import com.example.habittracker.R
 import com.example.habittracker.entities.Habit
 import com.example.habittracker.entities.HabitPriority
 import com.example.habittracker.entities.HabitType
 import com.example.habittracker.entities.Period
+import com.example.habittracker.fragments.main.MainFragmentDirections
+
 
 class HabitViewHolder(itemView: View,
-                      private val onHabitCardListener: OnHabitCardListener,
-                      private val context: Context)
+                      private val context: Context,
+                      private val navController: NavController, private val habitType: HabitType)
     : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
     private val title: TextView = itemView.findViewById(R.id.title)
@@ -30,7 +34,8 @@ class HabitViewHolder(itemView: View,
     }
 
     override fun onClick(view: View?) {
-        onHabitCardListener.onHabitCardClick(adapterPosition)
+        navController.navigate(MainFragmentDirections.actionMainFragmentToEditHabitFragment(adapterPosition,
+            MainActivity.fakeHabits[habitType]!![adapterPosition]))
     }
 
     fun bind(habit: Habit) {

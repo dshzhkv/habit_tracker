@@ -1,67 +1,56 @@
 package com.example.habittracker
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.habittracker.entities.Habit
-import com.example.habittracker.habitadapter.HabitAdapter
-import com.example.habittracker.habitadapter.OnHabitCardListener
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.habittracker.entities.HabitType
+import com.google.android.material.navigation.NavigationView
 
-class MainActivity : AppCompatActivity(), OnHabitCardListener {
+class MainActivity : AppCompatActivity(){
 
-    private var noHabitsMessage: TextView? = null
-
-    private var habitAdapter: HabitAdapter? = null
+    private lateinit var navHostFragment: NavHostFragment
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     companion object {
-        var fakeHabits: MutableList<Habit> = mutableListOf()
+        var fakeHabits: MutableMap<HabitType, MutableList<Habit>> =
+            mutableMapOf(HabitType.GOOD to mutableListOf(), HabitType.BAD to mutableListOf())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        noHabitsMessage = findViewById(R.id.no_habits_message)
-        habitAdapter = HabitAdapter(fakeHabits, applicationContext, this)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
-        setListenerOnAddHabitButton()
-    }
+        navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.my_nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
 
-    override fun onStart() {
-        super.onStart()
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        navigationView.setupWithNavController(navController)
 
-        if (fakeHabits.size == 0) {
-            noHabitsMessage?.visibility = View.VISIBLE
-        } else {
-            noHabitsMessage?.visibility = View.GONE
-        }
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
-        setupRecyclerView()
-    }
-
-    private fun setupRecyclerView() {
-        val recyclerView: RecyclerView = findViewById(R.id.habits_list)
-        recyclerView.adapter = habitAdapter
-    }
-
-    private fun setListenerOnAddHabitButton() {
-        val addHabitButton: FloatingActionButton = findViewById(R.id.add_habit_button)
-        addHabitButton.setOnClickListener {
-            val intent = Intent(this, EditHabitActivity::class.java)
-            startActivity(intent)
-        }
-    }
-
-    override fun onHabitCardClick(position: Int) {
-        val intent = Intent(this, EditHabitActivity::class.java)
-            .apply {
-                putExtra(getString(R.string.intent_extra_habit_position), position)
-                putExtra(getString(R.string.intent_extra_habit), fakeHabits[position])
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.editHabitFragment) {
+                supportActionBar?.hide()
+            } else {
+                supportActionBar?.show()
             }
-        startActivity(intent)
+        }
     }
+
+    override fun onSupportNavigateUp() = navController.navigateUp(appBarConfiguration)
 }

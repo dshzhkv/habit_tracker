@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/color_picker_background"
+    android:insetRight="@dimen/edit_habit_horizontal_margin"
+    android:insetLeft="@dimen/edit_habit_horizontal_margin">
+</inset>

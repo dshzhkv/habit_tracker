@@ -25,6 +25,17 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="FragmentLabelText">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="AppName">
+        <item name="fontFamily">@font/days_one</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">?attr/navDrawerHeaderTextColor</item>
+    </style>
+
     <style name="AddHabitButtonShape">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/corner_radius</item>
