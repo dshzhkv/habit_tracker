@@ -22,6 +22,8 @@
         <item name="toolbarBackgroundColor">?attr/colorPrimary</item>
         <item name="navDrawerHeaderBackgroundColor">?attr/colorPrimary</item>
         <item name="navDrawerHeaderTextColor">?attr/colorOnPrimary</item>
+        <item name="bottomSheetColor">?attr/colorPrimaryVariant</item>
+        <item name="bottomSheetTextColor">?attr/colorOnPrimary</item>
 
         <item name="tabSelectedTextColor">?attr/colorPrimaryVariant</item>
         <item name="tabIndicatorColor">?attr/colorPrimaryVariant</item>

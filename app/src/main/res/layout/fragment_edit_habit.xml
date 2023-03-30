@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/background">
@@ -126,29 +126,13 @@
                 android:layout_marginEnd="@dimen/edit_habit_icon_margin"
                 android:contentDescription="@string/edit_habit_priority_section_icon" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/edit_habit_spinner_height"
-                android:background="@drawable/spinner_border"
-                android:orientation="horizontal">
-
-                <Spinner
-                    android:id="@+id/priority"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:spinnerMode="dropdown"
-                    android:textAppearance="@style/Text.MainText"
-                    android:layout_marginStart="@dimen/edit_habit_priority_spinner_margin"
-                    android:layout_marginEnd="@dimen/edit_habit_priority_spinner_margin"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_drop_down_arrow"
-                    android:contentDescription="@string/edit_habit_arrow_drop_down_icon" />
-
-            </LinearLayout>
+            <Spinner
+                android:id="@+id/priority"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spinner_height"
+                android:layout_marginStart="@dimen/edit_habit_priority_spinner_margin"
+                style="@style/Spinner"
+                tools:contentDescription="priority"/>
 
         </LinearLayout>
 
@@ -192,7 +176,7 @@
                     android:textAppearance="@style/Text.MainText"
                     android:text="@string/edit_habit_repeat_times_default_value"
                     android:textAlignment="center"
-                    android:background="@drawable/spinner_border"
+                    android:background="@drawable/input_border"
                     android:layout_marginHorizontal="@dimen/edit_habit_repeat_inputs_margin"
                     android:importantForAutofill="no"
                     android:hint="@string/edit_habit_repeat_times_default_value"/>
@@ -204,27 +188,14 @@
                     android:text="@string/edit_habit_times_default_value"
                     android:textAppearance="@style/Text.MainText"/>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/edit_habit_spinner_height"
-                    android:background="@drawable/spinner_border"
-                    android:orientation="horizontal"
-                    android:layout_marginHorizontal="@dimen/edit_habit_repeat_inputs_margin">
+                <Spinner
+                    android:id="@+id/repetition_period"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/spinner_height"
+                    android:layout_marginStart="@dimen/edit_habit_repeat_inputs_margin"
+                    style="@style/Spinner"
+                    tools:contentDescription="repetition period"/>
 
-                    <Spinner
-                        android:id="@+id/repetition_period"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@android:color/transparent"
-                        android:spinnerMode="dropdown"
-                        android:textAppearance="@style/Text.MainText"/>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_drop_down_arrow"
-                        android:contentDescription="@string/edit_habit_arrow_drop_down_icon" />
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 

@@ -4,6 +4,7 @@
     <dimen name="divider_width">1dp</dimen>
     <dimen name="border_width">1dp</dimen>
     <dimen name="nav_drawer_header_height">104dp</dimen>
+    <dimen name="spinner_height">40dp</dimen>
 
     <dimen name="habits_list_margin">15dp</dimen>
 
@@ -30,7 +31,6 @@
     <dimen name="edit_habit_icon_margin">20dp</dimen>
     <dimen name="edit_habit_input_size">40dp</dimen>
     <dimen name="edit_habit_repeat_inputs_margin">10dp</dimen>
-    <dimen name="edit_habit_spinner_height">40dp</dimen>
     <dimen name="edit_habit_radio_button_height">40dp</dimen>
     <dimen name="edit_habit_radio_button_margin">-5dp</dimen>
     <dimen name="edit_habit_priority_spinner_tag_padding">5dp</dimen>
@@ -41,4 +41,6 @@
     <dimen name="color_picker_button_margin">10dp</dimen>
     <dimen name="color_picker_margin">20dp</dimen>
     <dimen name="color_picker_color_headers_margin">10dp</dimen>
+
+    <dimen name="bottom_sheet_items_margin">10dp</dimen>
 </resources>

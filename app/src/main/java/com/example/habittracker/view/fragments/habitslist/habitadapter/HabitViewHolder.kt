@@ -1,4 +1,4 @@
-package com.example.habittracker.habitadapter
+package com.example.habittracker.view.fragments.habitslist.habitadapter
 
 import android.content.Context
 import android.view.View
@@ -7,19 +7,18 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.habittracker.MainActivity
 import com.example.habittracker.R
 import com.example.habittracker.entities.Habit
 import com.example.habittracker.entities.HabitPriority
 import com.example.habittracker.entities.HabitType
 import com.example.habittracker.entities.Period
-import com.example.habittracker.fragments.main.MainFragmentDirections
+import com.example.habittracker.view.fragments.main.MainFragmentDirections
 
 
 class HabitViewHolder(itemView: View,
                       private val context: Context,
-                      private val navController: NavController, private val habitType: HabitType)
-    : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+                      private val navController: NavController)
+    : RecyclerView.ViewHolder(itemView) {
 
     private val title: TextView = itemView.findViewById(R.id.title)
     private val type: TextView = itemView.findViewById(R.id.type_tag)
@@ -29,14 +28,6 @@ class HabitViewHolder(itemView: View,
     private val colorTag: View = itemView.findViewById(R.id.habit_color_tag)
     private val descriptionSection: LinearLayout = itemView.findViewById(R.id.description_section)
 
-    init {
-        itemView.setOnClickListener(this)
-    }
-
-    override fun onClick(view: View?) {
-        navController.navigate(MainFragmentDirections.actionMainFragmentToEditHabitFragment(adapterPosition,
-            MainActivity.fakeHabits[habitType]!![adapterPosition]))
-    }
 
     fun bind(habit: Habit) {
         title.text = habit.title
@@ -44,7 +35,11 @@ class HabitViewHolder(itemView: View,
         bindPriority(habit.priority)
         repeatInformation.text = getRepetitionInformation(habit.repetitionTimes, habit.repetitionPeriod)
         bindDescription(habit.description)
-        colorTag.backgroundTintList = ContextCompat.getColorStateList(context, habit.colorId)
+        colorTag.backgroundTintList = ContextCompat.getColorStateList(context, habit.color.colorId)
+
+        itemView.setOnClickListener {
+            navController.navigate(MainFragmentDirections.actionMainFragmentToEditHabitFragment(habit.id))
+        }
     }
 
     private fun bindType(habitType: HabitType) {

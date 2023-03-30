@@ -66,4 +66,29 @@
 
     <string name="about_app_bad_habit_title">Don\'t smoke</string>
     <string name="about_app_bad_habit_repeat_information">Never</string>
+
+    <string name="bottom_sheet_title">Filters</string>
+    <string name="bottom_sheet_priority_title">Priority</string>
+    <string name="bottom_sheet_color_title">Color</string>
+    <string name="sort_by_priority_ascending">More important first</string>
+    <string name="sort_by_priority_descending">Less important first</string>
+    <string name="sort_by_creation_date_ascending">Old first</string>
+    <string name="sort_by_creation_date_descending">New first</string>
+
+    <string name="gradient_color1">Rainbow Bright</string>
+    <string name="gradient_color2">Deep Water</string>
+    <string name="gradient_color3">Valley of Glaciers</string>
+    <string name="gradient_color4">Kings of Sea</string>
+    <string name="gradient_color5">Azure Tide</string>
+    <string name="gradient_color6">Stamp Pad Green</string>
+    <string name="gradient_color7">Laurel Wreath</string>
+    <string name="gradient_color8">Green Goddess</string>
+    <string name="gradient_color9">Death Guard</string>
+    <string name="gradient_color10">Savannah Grass</string>
+    <string name="gradient_color11">Highlight Gold</string>
+    <string name="gradient_color12">Cameleer</string>
+    <string name="gradient_color13">Golden Nugget</string>
+    <string name="gradient_color14">Flaming Torch</string>
+    <string name="gradient_color15">Terracotta</string>
+    <string name="gradient_color16">Orange Vermilion</string>
 </resources>

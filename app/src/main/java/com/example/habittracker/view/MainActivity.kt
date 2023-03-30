@@ -1,4 +1,4 @@
-package com.example.habittracker
+package com.example.habittracker.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -10,8 +10,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.habittracker.entities.Habit
-import com.example.habittracker.entities.HabitType
+import com.example.habittracker.R
+import com.example.habittracker.model.HabitsListModel
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(){
@@ -21,8 +21,7 @@ class MainActivity : AppCompatActivity(){
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     companion object {
-        var fakeHabits: MutableMap<HabitType, MutableList<Habit>> =
-            mutableMapOf(HabitType.GOOD to mutableListOf(), HabitType.BAD to mutableListOf())
+        val model: HabitsListModel = HabitsListModel()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +31,10 @@ class MainActivity : AppCompatActivity(){
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        setupNavigation()
+    }
+
+    private fun setupNavigation() {
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.my_nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
