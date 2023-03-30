@@ -1,43 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/about_app_good_habits"
-        android:textAppearance="@style/Text.MainText"
-        android:textAlignment="center"/>
+        android:orientation="vertical"
+        android:gravity="center">
 
-    <include
-        layout="@layout/habit_card"
-        android:id="@+id/good_habit_example"
-        android:layout_width="361dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_app_good_habits"
+            android:textAppearance="@style/Text.MainText"
+            android:textAlignment="center"
+            android:layout_marginTop="10dp"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/about_app_bad_habits"
-        android:textAppearance="@style/Text.MainText"
-        android:textAlignment="center" />
+        <include
+            layout="@layout/habit_card"
+            android:id="@+id/good_habit_example"
+            android:layout_width="361dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"/>
 
-    <include
-        android:id="@+id/bad_habit_example"
-        layout="@layout/habit_card"
-        android:layout_width="361dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_app_bad_habits"
+            android:textAppearance="@style/Text.MainText"
+            android:textAlignment="center" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/about_app_the_end"
-        android:textAppearance="@style/Text.MainText"
-        android:textAlignment="center" />
+        <include
+            android:id="@+id/bad_habit_example"
+            layout="@layout/habit_card"
+            android:layout_width="361dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp" />
 
-</LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_app_the_end"
+            android:textAppearance="@style/Text.MainText"
+            android:textAlignment="center"
+            android:layout_marginBottom="10dp"/>
+
+    </LinearLayout>
+</ScrollView>
