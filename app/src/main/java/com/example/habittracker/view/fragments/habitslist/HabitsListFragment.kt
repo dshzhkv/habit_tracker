@@ -1,6 +1,5 @@
 package com.example.habittracker.view.fragments.habitslist
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -48,7 +47,7 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
 
         val recyclerView: RecyclerView = view.findViewById(R.id.habits_list)
         val navController: NavController = findNavController()
-        val habitAdapter = HabitAdapter(activity as Context, navController)
+        val habitAdapter = HabitAdapter(navController)
         recyclerView.adapter = habitAdapter
 
         val noHabitsMessage: TextView = view.findViewById(R.id.no_habits_message)
@@ -60,7 +59,7 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
         viewModel.habits.observe(viewLifecycleOwner) { habits ->
             val habitsOfType = habits[type]
             if (habitsOfType != null) {
-                habitAdapter.updateList(habitsOfType)
+                habitAdapter.submitList(habitsOfType)
 
                 if (habitsOfType.isEmpty()) {
                     noHabitsMessage.visibility = View.VISIBLE

@@ -3,7 +3,9 @@ package com.example.habittracker.view.fragments.filterbottomsheet
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.contains
@@ -11,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.example.habittracker.R
+import com.example.habittracker.databinding.FragmentFilterBottomSheetBinding
 import com.example.habittracker.entities.*
 import com.example.habittracker.viewmodel.HabitsListViewModel
 import com.example.habittracker.viewmodel.HabitsListViewModelFactory
@@ -22,10 +25,20 @@ class MultiSelectOptions<T>(
     var areChecked: BooleanArray
 )
 
-class FilterBottomSheetFragment : Fragment(R.layout.fragment_filter_bottom_sheet) {
+class FilterBottomSheetFragment : Fragment() {
 
     private lateinit var viewModel: HabitsListViewModel
     private lateinit var activityContext: Context
+    private lateinit var binding: FragmentFilterBottomSheetBinding
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentFilterBottomSheetBinding.inflate(inflater, container,false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -66,9 +79,9 @@ class FilterBottomSheetFragment : Fragment(R.layout.fragment_filter_bottom_sheet
         when (filterType) {
             FilterType.PRIORITY -> {
                 val prioritiesViews: Map<HabitPriority, View> = mapOf(
-                    HabitPriority.HIGH to view.findViewById(R.id.high_priority),
-                    HabitPriority.MEDIUM to view.findViewById(R.id.medium_priority),
-                    HabitPriority.LOW to view.findViewById(R.id.low_priority)
+                    HabitPriority.HIGH to binding.highPriority,
+                    HabitPriority.MEDIUM to binding.mediumPriority,
+                    HabitPriority.LOW to binding.lowPriority
                 )
 
                 viewModel.selectedPriorities.observe(viewLifecycleOwner) {selectedPriorities ->
@@ -83,10 +96,10 @@ class FilterBottomSheetFragment : Fragment(R.layout.fragment_filter_bottom_sheet
             }
             FilterType.COLOR -> {
                 val colorViews: List<View> = listOf(
-                    view.findViewById(R.id.color_1),
-                    view.findViewById(R.id.color_2),
-                    view.findViewById(R.id.color_3))
-                val moreColorsNumber: TextView = view.findViewById(R.id.more_colors_number)
+                    binding.color1,
+                    binding.color2,
+                    binding.color3)
+                val moreColorsNumber: TextView = binding.moreColorsNumber
 
                 viewModel.selectedColors.observe(viewLifecycleOwner) {colors ->
                     run {

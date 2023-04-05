@@ -11,12 +11,12 @@ class HabitsListModel {
         return habits.filter { habit -> habit.type == type }
     }
 
-    fun getHabit(id: Long): Habit? {
+    fun getHabit(id: Long?): Habit? {
         return habits.firstOrNull { habit -> habit.id == id }
     }
 
-    fun createOrUpdateHabit(id: Long, newHabit: Habit) {
-        if (id >= 0) {
+    fun createOrUpdateHabit(id: Long?, newHabit: Habit) {
+        if (id !== null && id >= 0) {
             editHabit(id, newHabit)
         } else {
             addHabit(newHabit)
