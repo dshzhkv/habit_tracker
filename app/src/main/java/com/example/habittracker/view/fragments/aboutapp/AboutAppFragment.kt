@@ -1,4 +1,4 @@
-package com.example.habittracker.fragments.aboutapp
+package com.example.habittracker.view.fragments.aboutapp
 
 import android.content.Context
 import android.os.Bundle

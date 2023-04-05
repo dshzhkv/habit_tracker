@@ -1,4 +1,4 @@
-package com.example.habittracker.fragments.edithabit
+package com.example.habittracker.view.fragments.edithabit
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -21,13 +21,13 @@ class PriorityAdapter(
 
     @SuppressLint("InflateParams", "ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val itemView = layoutInflater.inflate(R.layout.priority_spinner_layout, null, true)
+        val itemView = layoutInflater.inflate(R.layout.priority_spinner_item_layout, null, true)
         return setupView(itemView, position)
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         if (convertView == null) {
-            val itemView = layoutInflater.inflate(R.layout.priority_spinner_layout, parent, false)
+            val itemView = layoutInflater.inflate(R.layout.priority_spinner_item_layout, parent, false)
             return setupView(itemView, position)
         }
         return setupView(convertView, position)

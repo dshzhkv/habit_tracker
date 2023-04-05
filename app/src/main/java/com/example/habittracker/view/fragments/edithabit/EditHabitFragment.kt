@@ -1,4 +1,4 @@
-package com.example.habittracker.fragments.edithabit
+package com.example.habittracker.view.fragments.edithabit
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -10,28 +10,30 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.habittracker.*
-import com.example.habittracker.fragments.colorpicker.ColorPickerDialogFragment
-import com.example.habittracker.entities.Habit
-import com.example.habittracker.entities.HabitPriority
-import com.example.habittracker.entities.HabitType
-import com.example.habittracker.entities.Period
+import com.example.habittracker.entities.*
 import com.example.habittracker.extensions.customGetSerializable
+import com.example.habittracker.view.fragments.colorpicker.ColorPickerDialogFragment
+import com.example.habittracker.view.MainActivity
+import com.example.habittracker.viewmodel.EditHabitViewModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import java.util.*
 
-const val ARG_HABIT = "habit"
-const val ARG_HABIT_POSITION = "habitPosition"
+
+const val ARG_HABIT_Id = "habitId"
 
 const val REQUEST_KEY = "setSelectedColorRequest"
-const val BUNDLE_KEY = "selectedColorId"
+const val BUNDLE_KEY = "selectedColor"
 
 
 class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
+    private lateinit var viewModel: EditHabitViewModel
 
-    private var habit: Habit? = null
-    private var habitPosition: Int = -1
+    private var habitId: Long = -1
 
     private var title: TextInputEditText? = null
     private var titleLayout: TextInputLayout? = null
@@ -40,27 +42,37 @@ class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
     private var repetitionTimes: EditText? = null
     private var repetitionPeriod: Spinner? = null
     private var colorValue: TextView? = null
-    private var selectedColorId: Int = R.color.default_color
+    private var selectedColor: HabitColor = HabitColor.defaultColor()
     private var description: EditText? = null
 
     private lateinit var activityContext: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         arguments?.let {
-            habit = it.customGetSerializable(ARG_HABIT, Habit::class.java)
-            habitPosition = it.getInt(ARG_HABIT_POSITION)
+            habitId = it.getLong(ARG_HABIT_Id)
         }
+
+        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return EditHabitViewModel(MainActivity.model, habitId) as T
+            }
+        })[EditHabitViewModel::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         activityContext = activity as Context
 
         findViews(view)
 
-        if (habit !== null) {
-           autofill(habit!!)
+        viewModel.habit.observe(viewLifecycleOwner) { habit ->
+            if (habit != null) {
+                autofill(habit)
+            }
         }
 
         setListenerOnTitleEditText()
@@ -95,7 +107,7 @@ class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
         priority?.setSelection(HabitPriority.values().indexOf(habit.priority))
         repetitionTimes?.setText(habit.repetitionTimes.toString())
         repetitionPeriod?.setSelection(Period.values().indexOf(habit.repetitionPeriod))
-        setSelectedColor(habit.colorId)
+        setSelectedColor(habit.color)
         description?.setText(habit.description)
     }
 
@@ -118,7 +130,7 @@ class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
     private fun setAdapterForPrioritySpinner() {
         priority?.adapter = PriorityAdapter(
             activityContext,
-            R.layout.priority_spinner_layout,
+            R.layout.priority_spinner_item_layout,
             HabitPriority.values()
         )
     }
@@ -149,10 +161,11 @@ class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
 
     private fun setListenerOnColorValue() {
         colorValue?.setOnClickListener {
-            val colorPicker: DialogFragment = ColorPickerDialogFragment.newInstance(selectedColorId)
+            val colorPicker: DialogFragment = ColorPickerDialogFragment.newInstance(selectedColor)
             parentFragmentManager.setFragmentResultListener(REQUEST_KEY, this) { _, bundle ->
-                val selectedColorId = bundle.getInt(BUNDLE_KEY)
-                setSelectedColor(selectedColorId)
+                val selectedColor = bundle.customGetSerializable(BUNDLE_KEY, HabitColor::class.java)
+                    ?: HabitColor.defaultColor()
+                setSelectedColor(selectedColor)
             }
             colorPicker.show(parentFragmentManager, ColorPickerDialogFragment::class.java.name)
         }
@@ -171,11 +184,7 @@ class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
         saveButton.setOnClickListener {
             if (isInputCorrect()) {
                 val newHabit = parseInput()
-                if (shouldEdit()) {
-                    editHabit(newHabit)
-                } else {
-                    createHabit(newHabit)
-                }
+                viewModel.createOrUpdateHabit(habitId, newHabit)
                 findNavController().popBackStack()
             } else {
                 titleLayout?.error = getString(R.string.edit_habit_title_required)
@@ -183,26 +192,7 @@ class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
         }
     }
 
-    private fun editHabit(newHabit: Habit) {
-        if (newHabit.type == habit?.type) {
-            val habits = MainActivity.fakeHabits[newHabit.type]
-            if (habits != null) {
-                habits[habitPosition] = newHabit
-            }
-        } else {
-            MainActivity.fakeHabits[habit?.type]?.remove(habit)
-            createHabit(newHabit)
-        }
-    }
-
-    private fun createHabit(newHabit: Habit) {
-        MainActivity.fakeHabits[newHabit.type]?.add(newHabit)
-    }
-
     private fun isInputCorrect(): Boolean = title?.text.toString().isNotEmpty()
-
-    private fun shouldEdit(): Boolean =
-        habitPosition >= 0 && habit != null
 
     private fun parseInput(): Habit {
         val title: String = title?.text.toString()
@@ -216,26 +206,28 @@ class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
         val description: String = description?.text.toString()
 
         return Habit(
+            habitId,
             title,
             type,
             priority,
             repetitionTimes,
             repetitionPeriod,
             description,
-            selectedColorId,
+            selectedColor,
+            Date()
         )
     }
 
-    private fun setSelectedColor(colorId: Int) {
-        selectedColorId = colorId
+    private fun setSelectedColor(color: HabitColor) {
+        selectedColor = color
 
-        val colorValue = activityContext.getColor(colorId)
+        val colorValue = activityContext.getColor(color.colorId)
         if (this.colorValue != null) {
             TextViewCompat.setCompoundDrawableTintList(
                 this.colorValue!!,
                 ColorStateList.valueOf(colorValue)
             )
-            this.colorValue!!.text = colorValue.toHex()
+            this.colorValue!!.text = activityContext.getString(color.nameId)
         }
     }
 }

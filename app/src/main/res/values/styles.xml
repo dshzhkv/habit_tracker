@@ -60,4 +60,11 @@
         <item name="strokeColor">@color/white</item>
         <item name="strokeWidth">@dimen/border_width</item>
     </style>
+
+    <style name="Spinner">
+        <item name="android:background">@drawable/spinner</item>
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:textAppearance">@style/Text.MainText</item>
+    </style>
+
 </resources>
