@@ -29,7 +29,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/type_tabs"/>
+            app:layout_constraintTop_toBottomOf="@id/type_tabs"
+            android:layout_marginBottom="@dimen/bottom_sheet_peek_height"/>
     </LinearLayout>
 
 
@@ -52,7 +53,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/filter_bottom_sheet"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="70dp"
+        app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,115 +1,94 @@
 package com.example.habittracker.viewmodel
 
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.habittracker.entities.*
-import com.example.habittracker.model.HabitsListModel
+import com.example.habittracker.model.HabitRepository
 
-class HabitsListViewModel(private val model: HabitsListModel): ViewModel() {
 
-    private var _habitsMap: MutableMap<HabitType, List<Habit>> = mutableMapOf()
+data class Filter(
+    val habits: LiveData<List<Habit>>,
+    var priorities: MutableSet<HabitPriority>,
+    var colors: MutableSet<HabitColor>,
+    var sortType: SortType,
+    var searchQuery: String,
+)
 
+class HabitsListViewModel(private val repository: HabitRepository): ViewModel() {
     private var _sortType: SortType = SortType.CREATION_DATE_DESCENDING
     private var _selectedPriorities: MutableSet<HabitPriority> = mutableSetOf()
     private var _selectedColors: MutableSet<HabitColor> = mutableSetOf()
     private var _searchQuery: String = ""
 
+    private var filter: MutableLiveData<Filter> = MutableLiveData<Filter>(Filter(
+        repository.habits,
+        _selectedPriorities,
+        _selectedColors,
+        _sortType,
+        _searchQuery,
+    ))
+
+    var habits: LiveData<List<Habit>> = repository.habits
+
     private var selectedPrioritiesMutableLiveData: MutableLiveData<MutableSet<HabitPriority>> = MutableLiveData(_selectedPriorities)
     private var selectedColorsMutableLiveData: MutableLiveData<MutableSet<HabitColor>> = MutableLiveData(_selectedColors)
-    private var habitsMutableLiveData: MutableLiveData<Map<HabitType, List<Habit>>> = MutableLiveData(_habitsMap)
 
-    val habits: LiveData<Map<HabitType, List<Habit>>> = habitsMutableLiveData
     val selectedPriorities: LiveData<MutableSet<HabitPriority>> = selectedPrioritiesMutableLiveData
     val selectedColors: LiveData<MutableSet<HabitColor>> = selectedColorsMutableLiveData
 
     init {
-        HabitType.values().map { _habitsMap[it] = listOf() }
-        habitsMutableLiveData.value = _habitsMap
-
         resetFilters()
-    }
+        applyFilters()
 
-    fun loadHabits() {
-        for (type in _habitsMap.keys) {
-            _habitsMap[type] = model.getHabits(type).applyAllFilters()
+        habits = Transformations.switchMap(filter) { filter ->
+            repository.applyFilters(filter)
         }
-        habitsMutableLiveData.value = _habitsMap
     }
 
     fun <T> removeFromFilter(option: T, filterType: FilterType) {
         when (filterType) {
             FilterType.PRIORITY -> {
-                val priority = option as HabitPriority
-                _selectedPriorities.remove(priority)
+                _selectedPriorities.remove(option as HabitPriority)
                 selectedPrioritiesMutableLiveData.value = _selectedPriorities
-                removeFromFilter { habit -> isFilteredByPriority(habit.priority) }
             }
             FilterType.COLOR -> {
-                val color = option as HabitColor
-                _selectedColors.remove(color)
+                _selectedColors.remove(option as HabitColor)
                 selectedColorsMutableLiveData.value = _selectedColors
-                removeFromFilter { habit -> isFilteredByColor(habit.color) }
             }
         }
-    }
 
-    private fun removeFromFilter(isFiltered: (habit: Habit) -> Boolean) {
-        for (habitsList in _habitsMap.entries) {
-            val filteredHabits: MutableList<Habit> = mutableListOf()
-            habitsList.value.map {
-                if (isFiltered(it)) {
-                    filteredHabits.add(it)
-                }
-            }
-            _habitsMap[habitsList.key] = filteredHabits
-        }
-
-        habitsMutableLiveData.value = _habitsMap
+        applyFilters()
     }
 
     fun <T> addToFilter(option: T, filterType: FilterType) {
         when (filterType) {
             FilterType.PRIORITY -> {
-                val priority = option as HabitPriority
-                _selectedPriorities.add(priority)
+                _selectedPriorities.add(option as HabitPriority)
                 selectedPrioritiesMutableLiveData.value = _selectedPriorities
-                addToFilter()
             }
             FilterType.COLOR -> {
-                val color = option as HabitColor
-                _selectedColors.add(color)
+                _selectedColors.add(option as HabitColor)
                 selectedColorsMutableLiveData.value = _selectedColors
-                addToFilter()
             }
         }
-    }
 
-    private fun addToFilter() {
-        for (habitsList in _habitsMap.entries) {
-            _habitsMap[habitsList.key] = model.getHabits(habitsList.key).applyAllFilters()
-        }
-
-        habitsMutableLiveData.value = _habitsMap
+        applyFilters()
     }
 
     fun search(query: String) {
         resetFilters()
         _searchQuery = query
 
-        for (habitsList in _habitsMap.entries) {
-            val type = habitsList.key
-            _habitsMap[type] =  model.getHabits(type).filter { isFilteredBySearch(it.title) }
-        }
-
-        habitsMutableLiveData.value = _habitsMap
+        applyFilters()
     }
 
     fun sortBy(sortType: SortType) {
-        for (habitsList in _habitsMap.entries) {
-            _habitsMap[habitsList.key] = habitsList.value.sort(sortType)
-        }
-        habitsMutableLiveData.value = _habitsMap
+        _sortType = sortType
+
+        applyFilters()
     }
 
     private fun resetFilters() {
@@ -124,25 +103,21 @@ class HabitsListViewModel(private val model: HabitsListModel): ViewModel() {
         _searchQuery = ""
     }
 
-    private fun List<Habit>.applyAllFilters(): List<Habit> =
-        this.filter { isFilteredByPriority(it.priority) && isFilteredBySearch(it.title) && isFilteredByColor(it.color)}.sort(_sortType)
+    private fun applyFilters() {
+        filter.value = Filter(
+            repository.habits,
+            _selectedPriorities,
+            _selectedColors,
+            _sortType,
+            _searchQuery
+        )
+    }
 
     private fun isFilteredByPriority(priority: HabitPriority): Boolean =
         _selectedPriorities.contains(priority)
 
     private fun isFilteredByColor(color: HabitColor): Boolean =
         _selectedColors.contains(color)
-
-    private fun isFilteredBySearch(title: String): Boolean =
-        title.contains(_searchQuery, true)
-
-    private fun List<Habit>.sort(sortType: SortType): List<Habit> =
-        when(sortType) {
-            SortType.PRIORITY_ASCENDING -> this.sortedBy { it.priority.value }
-            SortType.PRIORITY_DESCENDING -> this.sortedByDescending { it.priority.value }
-            SortType.CREATION_DATE_ASCENDING -> this.sortedBy { it.creationDate }
-            SortType.CREATION_DATE_DESCENDING -> this.sortedByDescending { it.creationDate }
-        }
 
     fun getCheckedPriorities(): BooleanArray =
         BooleanArray(HabitPriority.values().size) { index: Int ->

@@ -48,6 +48,7 @@
     <string name="edit_habit_color_default_value">Default color</string>
     <string name="edit_habit_description_icon">Description icon</string>
     <string name="edit_habit_description_hint">Add description</string>
+    <string name="edit_habit_delete_button">Delete</string>
 
     <string name="color_picker_selected_color">Selected color</string>
     <string name="color_picker_rgb">RGB</string>

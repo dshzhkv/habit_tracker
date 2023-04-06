@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.habittracker.HabitTrackerApplication
 import com.example.habittracker.viewmodel.HabitsListViewModel
 import com.example.habittracker.R
 import com.example.habittracker.entities.HabitType
@@ -37,9 +38,6 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
         arguments?.let {
             type = it.customGetSerializable(ARG_TYPE, HabitType::class.java) ?: HabitType.GOOD
         }
-
-        viewModel = ViewModelProvider(activity as ViewModelStoreOwner,
-            HabitsListViewModelFactory())[HabitsListViewModel::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,16 +54,17 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
             HabitType.BAD -> getString(R.string.habits_list_no_bad_habits)
         }
 
-        viewModel.habits.observe(viewLifecycleOwner) { habits ->
-            val habitsOfType = habits[type]
-            if (habitsOfType != null) {
-                habitAdapter.submitList(habitsOfType)
+        viewModel = ViewModelProvider(activity as ViewModelStoreOwner,
+            HabitsListViewModelFactory((activity?.application as HabitTrackerApplication).repository))[HabitsListViewModel::class.java]
 
-                if (habitsOfType.isEmpty()) {
-                    noHabitsMessage.visibility = View.VISIBLE
-                } else {
-                    noHabitsMessage.visibility = View.GONE
-                }
+        viewModel.habits.observe(viewLifecycleOwner) { habits ->
+            val habitsOfType = habits.filter { it.type === type }
+            habitAdapter.submitList(habitsOfType)
+
+            if (habitsOfType.isEmpty()) {
+                noHabitsMessage.visibility = View.VISIBLE
+            } else {
+                noHabitsMessage.visibility = View.GONE
             }
         }
     }

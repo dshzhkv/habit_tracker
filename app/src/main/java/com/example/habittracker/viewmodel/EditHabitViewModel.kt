@@ -4,24 +4,28 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.habittracker.entities.Habit
-import com.example.habittracker.model.HabitsListModel
+import com.example.habittracker.model.HabitRepository
 
 
-class EditHabitViewModel(private val model: HabitsListModel, private val habitId: Long?) : ViewModel() {
+class EditHabitViewModel(private val repository: HabitRepository, private val habitId: Long?) : ViewModel() {
 
     private var mutableHabit: MutableLiveData<Habit?> = MutableLiveData()
 
-    val habit: LiveData<Habit?> = mutableHabit
+    val habit: LiveData<Habit?> = repository.getHabit(habitId)
 
     init {
         loadHabit()
     }
 
     private fun loadHabit() {
-        mutableHabit.postValue(model.getHabit(habitId))
+        mutableHabit = MutableLiveData(repository.getHabit(habitId).value)
     }
 
-    fun createOrUpdateHabit(id: Long?, newHabit: Habit) {
-        model.createOrUpdateHabit(id, newHabit)
+    fun createOrUpdateHabit(newHabit: Habit) {
+        repository.createOrUpdate(newHabit)
+    }
+
+    fun deleteHabit(newHabit: Habit) {
+        repository.delete(newHabit)
     }
 }

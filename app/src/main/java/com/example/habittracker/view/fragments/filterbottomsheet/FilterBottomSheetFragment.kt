@@ -12,9 +12,13 @@ import androidx.core.view.contains
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import com.example.habittracker.HabitTrackerApplication
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentFilterBottomSheetBinding
-import com.example.habittracker.entities.*
+import com.example.habittracker.entities.FilterType
+import com.example.habittracker.entities.HabitColor
+import com.example.habittracker.entities.HabitPriority
+import com.example.habittracker.entities.SortType
 import com.example.habittracker.viewmodel.HabitsListViewModel
 import com.example.habittracker.viewmodel.HabitsListViewModelFactory
 
@@ -44,7 +48,7 @@ class FilterBottomSheetFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(activity as ViewModelStoreOwner,
-            HabitsListViewModelFactory())[HabitsListViewModel::class.java]
+            HabitsListViewModelFactory((activity?.application as HabitTrackerApplication).repository))[HabitsListViewModel::class.java]
 
         activityContext = activity as Context
 
