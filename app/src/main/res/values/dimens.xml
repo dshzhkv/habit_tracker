@@ -43,4 +43,5 @@
     <dimen name="color_picker_color_headers_margin">10dp</dimen>
 
     <dimen name="bottom_sheet_items_margin">10dp</dimen>
+    <dimen name="bottom_sheet_peek_height">70dp</dimen>
 </resources>

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import com.example.habittracker.HabitTrackerApplication
 import com.example.habittracker.view.fragments.habitslist.HabitsListAdapter
 import com.example.habittracker.R
 import com.example.habittracker.entities.HabitType
@@ -21,15 +22,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     private lateinit var viewModel: HabitsListViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(activity as ViewModelStoreOwner,
-            HabitsListViewModelFactory())[HabitsListViewModel::class.java]
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(activity as ViewModelStoreOwner,
+            HabitsListViewModelFactory((activity?.application as HabitTrackerApplication).repository))[HabitsListViewModel::class.java]
 
         val viewPager: ViewPager2 = view.findViewById(R.id.type_habits_list)
         val habitsListAdapter = HabitsListAdapter(this)
@@ -38,8 +35,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         setupTabLayout(view, viewPager)
         startFilterBottomSheet(savedInstanceState)
         setListenerOnAddHabitButton(view)
-
-        viewModel.loadHabits()
     }
 
     private fun setupTabLayout(view: View, viewPager: ViewPager2) {

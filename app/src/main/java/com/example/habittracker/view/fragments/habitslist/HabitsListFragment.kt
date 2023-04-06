@@ -1,6 +1,5 @@
 package com.example.habittracker.view.fragments.habitslist
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -10,6 +9,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.habittracker.HabitTrackerApplication
 import com.example.habittracker.viewmodel.HabitsListViewModel
 import com.example.habittracker.R
 import com.example.habittracker.entities.HabitType
@@ -38,9 +38,6 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
         arguments?.let {
             type = it.customGetSerializable(ARG_TYPE, HabitType::class.java) ?: HabitType.GOOD
         }
-
-        viewModel = ViewModelProvider(activity as ViewModelStoreOwner,
-            HabitsListViewModelFactory())[HabitsListViewModel::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,7 +45,7 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
 
         val recyclerView: RecyclerView = view.findViewById(R.id.habits_list)
         val navController: NavController = findNavController()
-        val habitAdapter = HabitAdapter(activity as Context, navController)
+        val habitAdapter = HabitAdapter(navController)
         recyclerView.adapter = habitAdapter
 
         val noHabitsMessage: TextView = view.findViewById(R.id.no_habits_message)
@@ -57,16 +54,17 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
             HabitType.BAD -> getString(R.string.habits_list_no_bad_habits)
         }
 
-        viewModel.habits.observe(viewLifecycleOwner) { habits ->
-            val habitsOfType = habits[type]
-            if (habitsOfType != null) {
-                habitAdapter.updateList(habitsOfType)
+        viewModel = ViewModelProvider(activity as ViewModelStoreOwner,
+            HabitsListViewModelFactory((activity?.application as HabitTrackerApplication).repository))[HabitsListViewModel::class.java]
 
-                if (habitsOfType.isEmpty()) {
-                    noHabitsMessage.visibility = View.VISIBLE
-                } else {
-                    noHabitsMessage.visibility = View.GONE
-                }
+        viewModel.habits.observe(viewLifecycleOwner) { habits ->
+            val habitsOfType = habits.filter { it.type === type }
+            habitAdapter.submitList(habitsOfType)
+
+            if (habitsOfType.isEmpty()) {
+                noHabitsMessage.visibility = View.VISIBLE
+            } else {
+                noHabitsMessage.visibility = View.GONE
             }
         }
     }

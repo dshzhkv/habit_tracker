@@ -244,6 +244,18 @@
                 android:inputType="text"
                 android:importantForAutofill="no" />
         </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/delete_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/spinner_height"
+            android:layout_marginHorizontal="@dimen/edit_habit_horizontal_margin"
+            android:layout_marginVertical="30dp"
+            android:background="@drawable/button"
+            android:backgroundTint="@color/red"
+            android:text="@string/edit_habit_delete_button"
+            android:textColor="@color/white"
+            android:textAppearance="@style/Text.SmallText"/>
     </LinearLayout>
 
 </ScrollView>

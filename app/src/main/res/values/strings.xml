@@ -50,6 +50,7 @@
     <string name="edit_habit_color_default_value">Цвет по умолчанию</string>
     <string name="edit_habit_description_icon">Иконка описания</string>
     <string name="edit_habit_description_hint">Добавьте описание</string>
+    <string name="edit_habit_delete_button">Удалить</string>
 
     <string name="color_picker_selected_color">Выбранный цвет</string>
     <string name="color_picker_rgb">RGB</string>

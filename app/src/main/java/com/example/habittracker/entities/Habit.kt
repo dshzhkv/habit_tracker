@@ -1,9 +1,10 @@
 package com.example.habittracker.entities
 
-import java.util.Date
+import androidx.room.*
+import java.util.*
 
+@Entity
 data class Habit(
-    val id: Long,
     val title: String,
     val type: HabitType,
     val priority: HabitPriority,
@@ -12,4 +13,5 @@ data class Habit(
     val description: String?,
     val color: HabitColor,
     val creationDate: Date,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
 ) : java.io.Serializable

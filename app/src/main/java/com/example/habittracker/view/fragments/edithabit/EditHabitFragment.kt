@@ -3,156 +3,149 @@ package com.example.habittracker.view.fragments.edithabit
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.core.widget.TextViewCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.habittracker.*
+import com.example.habittracker.databinding.FragmentEditHabitBinding
 import com.example.habittracker.entities.*
 import com.example.habittracker.extensions.customGetSerializable
 import com.example.habittracker.view.fragments.colorpicker.ColorPickerDialogFragment
-import com.example.habittracker.view.MainActivity
 import com.example.habittracker.viewmodel.EditHabitViewModel
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import com.example.habittracker.viewmodel.EditHabitViewModelFactory
 import java.util.*
 
 
-const val ARG_HABIT_Id = "habitId"
+const val ARG_HABIT_ID = "habitId"
 
 const val REQUEST_KEY = "setSelectedColorRequest"
 const val BUNDLE_KEY = "selectedColor"
 
 
-class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
+class EditHabitFragment : Fragment() {
+
     private lateinit var viewModel: EditHabitViewModel
-
-    private var habitId: Long = -1
-
-    private var title: TextInputEditText? = null
-    private var titleLayout: TextInputLayout? = null
-    private var type: RadioGroup? = null
-    private var priority: Spinner? = null
-    private var repetitionTimes: EditText? = null
-    private var repetitionPeriod: Spinner? = null
-    private var colorValue: TextView? = null
-    private var selectedColor: HabitColor = HabitColor.defaultColor()
-    private var description: EditText? = null
-
+    private lateinit var binding: FragmentEditHabitBinding
     private lateinit var activityContext: Context
+
+    private var habitId: Long? = null
+    private var selectedColor: HabitColor = HabitColor.defaultColor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            habitId = it.getLong(ARG_HABIT_Id)
-        }
-
-        viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return EditHabitViewModel(MainActivity.model, habitId) as T
+            habitId = if (it.getLong(ARG_HABIT_ID) == -1L) {
+                null
+            } else {
+                it.getLong(ARG_HABIT_ID)
             }
-        })[EditHabitViewModel::class.java]
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentEditHabitBinding.inflate(inflater, container,false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activityContext = activity as Context
+        viewModel = ViewModelProvider(this,
+            EditHabitViewModelFactory((activity?.application as HabitTrackerApplication).repository, habitId))[EditHabitViewModel::class.java]
 
-        findViews(view)
+        activityContext = activity as Context
 
         viewModel.habit.observe(viewLifecycleOwner) { habit ->
             if (habit != null) {
                 autofill(habit)
+
+                binding.deleteButton.visibility = View.VISIBLE
+                binding.deleteButton.setOnClickListener {
+                    viewModel.deleteHabit(habit)
+                    findNavController().popBackStack()
+                }
+            } else {
+                binding.deleteButton.visibility = View.GONE
             }
         }
 
         setListenerOnTitleEditText()
-        setListenerOnTypeRadioGroup(view)
+        setListenerOnTypeRadioGroup()
         setAdapterForPrioritySpinner()
-        setListenerOnRepetitionTimesEditText(view)
+        setListenerOnRepetitionTimesEditText()
         setAdapterForRepetitionPeriodSpinner()
 
         setListenerOnColorValue()
 
-        setListenerOnCloseButton(view)
-        setListenerOnSaveButton(view)
-    }
-
-    private fun findViews(view: View) {
-        title = view.findViewById(R.id.habit_title)
-        titleLayout = view.findViewById(R.id.habit_title_TextInputLayout)
-        type = view.findViewById(R.id.type)
-        priority = view.findViewById(R.id.priority)
-        repetitionTimes = view.findViewById(R.id.repetition_times)
-        repetitionPeriod = view.findViewById(R.id.repetition_period)
-        colorValue = view.findViewById(R.id.color_value)
-        description = view.findViewById(R.id.description_edit)
+        setListenerOnCloseButton()
+        setListenerOnSaveButton()
     }
 
     private fun autofill(habit: Habit) {
-        title?.setText(habit.title)
-        type?.check(when (habit.type) {
+        binding.habitTitle.setText(habit.title)
+        binding.type.check(when (habit.type) {
             HabitType.GOOD -> R.id.good_habit_button
             HabitType.BAD -> R.id.bad_habit_button
         })
-        priority?.setSelection(HabitPriority.values().indexOf(habit.priority))
-        repetitionTimes?.setText(habit.repetitionTimes.toString())
-        repetitionPeriod?.setSelection(Period.values().indexOf(habit.repetitionPeriod))
+        binding.priority.setSelection(HabitPriority.values().indexOf(habit.priority))
+        binding.repetitionTimes.setText(habit.repetitionTimes.toString())
+        binding.repetitionPeriod.setSelection(Period.values().indexOf(habit.repetitionPeriod))
         setSelectedColor(habit.color)
-        description?.setText(habit.description)
+        binding.descriptionEdit.setText(habit.description)
     }
 
     private fun setListenerOnTitleEditText() {
-        title?.doOnTextChanged { _, _, _, _ ->
-            titleLayout?.error = null
+        binding.habitTitle.doOnTextChanged { _, _, _, _ ->
+            binding.habitTitleTextInputLayout.error = null
         }
     }
 
-    private fun setListenerOnTypeRadioGroup(view: View) {
-        val repeatText: TextView = view.findViewById(R.id.repeat_text)
-        type?.setOnCheckedChangeListener { _, checkedItemId ->
+    private fun setListenerOnTypeRadioGroup() {
+        binding.type.setOnCheckedChangeListener { _, checkedItemId ->
             when (checkedItemId) {
-                R.id.bad_habit_button -> repeatText.setText(R.string.edit_habit_allowed_text)
-                R.id.good_habit_button -> repeatText.setText(R.string.edit_habit_repeat_text)
+                R.id.bad_habit_button -> binding.repeatText.setText(R.string.edit_habit_allowed_text)
+                R.id.good_habit_button -> binding.repeatText.setText(R.string.edit_habit_repeat_text)
             }
         }
     }
 
     private fun setAdapterForPrioritySpinner() {
-        priority?.adapter = PriorityAdapter(
+        binding.priority.adapter = PriorityAdapter(
             activityContext,
             R.layout.priority_spinner_item_layout,
             HabitPriority.values()
         )
     }
 
-    private fun setListenerOnRepetitionTimesEditText(view: View) {
-        val repeatTimes: TextView = view.findViewById(R.id.repeat_times)
-
-        repetitionTimes?.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus && repetitionTimes?.text.toString().isEmpty()) {
-                repetitionTimes?.setText(0.toString())
+    private fun setListenerOnRepetitionTimesEditText() {
+        binding.repetitionTimes.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus && binding.repetitionTimes.text.toString().isEmpty()) {
+                binding.repetitionTimes.setText(0.toString())
             }
         }
 
-        repetitionTimes?.doAfterTextChanged {
+        binding.repetitionTimes.doAfterTextChanged {
             if (it.toString().isNotEmpty()) {
-                repeatTimes.text = resources.getQuantityString(R.plurals.times, it.toString().toInt())
+                binding.repeatTimes.text = resources.getQuantityString(R.plurals.times, it.toString().toInt())
             }
         }
     }
 
     private fun setAdapterForRepetitionPeriodSpinner() {
-        repetitionPeriod?.adapter = ArrayAdapter(
+        binding.repetitionPeriod.adapter = ArrayAdapter(
             activityContext,
             android.R.layout.simple_spinner_item,
             Period.values().map { getString(it.textId) }
@@ -160,7 +153,7 @@ class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
     }
 
     private fun setListenerOnColorValue() {
-        colorValue?.setOnClickListener {
+        binding.colorValue.setOnClickListener {
             val colorPicker: DialogFragment = ColorPickerDialogFragment.newInstance(selectedColor)
             parentFragmentManager.setFragmentResultListener(REQUEST_KEY, this) { _, bundle ->
                 val selectedColor = bundle.customGetSerializable(BUNDLE_KEY, HabitColor::class.java)
@@ -171,42 +164,38 @@ class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
         }
     }
 
-    private fun setListenerOnCloseButton(view: View) {
-        val closeButton: ImageButton = view.findViewById(R.id.close_button)
-        closeButton.setOnClickListener {
+    private fun setListenerOnCloseButton() {
+        binding.closeButton.setOnClickListener {
             findNavController().popBackStack()
         }
     }
 
-    private fun setListenerOnSaveButton(view: View) {
-        val saveButton: Button = view.findViewById(R.id.save_habit_button)
-
-        saveButton.setOnClickListener {
+    private fun setListenerOnSaveButton() {
+        binding.saveHabitButton.setOnClickListener {
             if (isInputCorrect()) {
                 val newHabit = parseInput()
-                viewModel.createOrUpdateHabit(habitId, newHabit)
+                viewModel.createOrUpdateHabit(newHabit)
                 findNavController().popBackStack()
             } else {
-                titleLayout?.error = getString(R.string.edit_habit_title_required)
+                binding.habitTitleTextInputLayout.error = getString(R.string.edit_habit_title_required)
             }
         }
     }
 
-    private fun isInputCorrect(): Boolean = title?.text.toString().isNotEmpty()
+    private fun isInputCorrect(): Boolean = binding.habitTitle.text.toString().isNotEmpty()
 
     private fun parseInput(): Habit {
-        val title: String = title?.text.toString()
-        val type: HabitType = when (type?.checkedRadioButtonId) {
+        val title: String = binding.habitTitle.text.toString()
+        val type: HabitType = when (binding.type.checkedRadioButtonId) {
             R.id.bad_habit_button -> HabitType.BAD
             else -> HabitType.GOOD
         }
-        val priority: HabitPriority =  HabitPriority.values()[priority?.selectedItemPosition ?: 0]
-        val repetitionTimes: Int = repetitionTimes?.text.toString().toInt()
-        val repetitionPeriod: Period = Period.values()[repetitionPeriod?.selectedItemPosition ?: 0]
-        val description: String = description?.text.toString()
+        val priority: HabitPriority =  HabitPriority.values()[binding.priority.selectedItemPosition]
+        val repetitionTimes: Int = binding.repetitionTimes.text.toString().toInt()
+        val repetitionPeriod: Period = Period.values()[binding.repetitionPeriod.selectedItemPosition]
+        val description: String = binding.descriptionEdit.text.toString()
 
         return Habit(
-            habitId,
             title,
             type,
             priority,
@@ -214,7 +203,8 @@ class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
             repetitionPeriod,
             description,
             selectedColor,
-            Date()
+            Date(),
+            habitId ?: 0
         )
     }
 
@@ -222,12 +212,11 @@ class EditHabitFragment : Fragment(R.layout.fragment_edit_habit) {
         selectedColor = color
 
         val colorValue = activityContext.getColor(color.colorId)
-        if (this.colorValue != null) {
-            TextViewCompat.setCompoundDrawableTintList(
-                this.colorValue!!,
-                ColorStateList.valueOf(colorValue)
-            )
-            this.colorValue!!.text = activityContext.getString(color.nameId)
-        }
+
+        TextViewCompat.setCompoundDrawableTintList(
+            binding.colorValue,
+            ColorStateList.valueOf(colorValue)
+        )
+        binding.colorValue.text = activityContext.getString(color.nameId)
     }
 }
