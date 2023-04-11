@@ -9,10 +9,10 @@ class HabitRepository(private val habitDao: HabitDao) {
 
     var habits: LiveData<List<Habit>> = habitDao.getAll()
 
-    fun createOrUpdate(habit: Habit) =
+    suspend fun createOrUpdate(habit: Habit) =
         habitDao.createOrUpdate(habit)
 
-    fun delete(habit: Habit) =
+    suspend fun delete(habit: Habit) =
         habitDao.delete(habit)
 
     fun getHabit(id: Long?): LiveData<Habit?> =
