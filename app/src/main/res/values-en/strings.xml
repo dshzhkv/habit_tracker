@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Habit Tracker</string>
     <string name="app_name_with_line_break">Habit \nTracker</string>
+    <string name="avatar_description">avatar</string>
 
     <string name="label_main">My Habits</string>
     <string name="label_about">About Us</string>

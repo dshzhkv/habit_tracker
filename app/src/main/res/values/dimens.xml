@@ -3,7 +3,6 @@
     <dimen name="corner_radius">10dp</dimen>
     <dimen name="divider_width">1dp</dimen>
     <dimen name="border_width">1dp</dimen>
-    <dimen name="nav_drawer_header_height">104dp</dimen>
     <dimen name="spinner_height">40dp</dimen>
 
     <dimen name="habits_list_margin">15dp</dimen>

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Трекер привычек</string>
     <string name="app_name_with_line_break">Трекер \nпривычек</string>
+    <string name="avatar_description">avatar</string>
 
     <string name="label_main">Мои привычки</string>
     <string name="label_about">О нас</string>

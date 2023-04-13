@@ -1,21 +1,37 @@
 package com.example.habittracker.model
 
 import androidx.lifecycle.LiveData
+import com.example.habittracker.entities.DeleteHabitBody
 import com.example.habittracker.entities.Habit
 import com.example.habittracker.entities.SortType
 import com.example.habittracker.viewmodel.Filter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class HabitRepository(private val habitDao: HabitDao) {
+class HabitRepository(private val habitDao: HabitDao, private val service: HabitService) {
 
     var habits: LiveData<List<Habit>> = habitDao.getAll()
 
+    suspend fun getHabitsFromServer() =
+        withContext(Dispatchers.IO) {
+            val habits = service.getAllHabits()
+            habitDao.clear()
+            habitDao.insert(habits)
+    }
+
     suspend fun createOrUpdate(habit: Habit) =
-        habitDao.createOrUpdate(habit)
+        withContext(Dispatchers.IO) {
+            service.addOrUpdateHabit(habit)
+            getHabitsFromServer()
+        }
 
     suspend fun delete(habit: Habit) =
-        habitDao.delete(habit)
+        withContext(Dispatchers.IO) {
+            service.deleteHabit(DeleteHabitBody(habit.id))
+            getHabitsFromServer()
+        }
 
-    fun getHabit(id: Long?): LiveData<Habit?> =
+    fun getHabit(id: String?): LiveData<Habit?> =
         habitDao.getHabit(id)
 
     fun applyFilters(filter: Filter): LiveData<List<Habit>> =

@@ -1,10 +1,7 @@
 package com.example.habittracker.model
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Query
-import androidx.room.Upsert
+import androidx.room.*
 import com.example.habittracker.entities.*
 
 @Dao
@@ -17,7 +14,7 @@ interface HabitDao {
     suspend fun delete(habit: Habit)
 
     @Query("SELECT * FROM habit WHERE id LIKE :id")
-    fun getHabit(id: Long?): LiveData<Habit?>
+    fun getHabit(id: String?): LiveData<Habit?>
 
     @Query("SELECT * FROM habit")
     fun getAll(): LiveData<List<Habit>>
@@ -48,4 +45,9 @@ interface HabitDao {
         isAsc: Boolean,
         searchQuery: String): LiveData<List<Habit>>
 
+    @Insert
+    fun insert(habits: List<Habit>)
+
+    @Query("DELETE FROM habit")
+    fun clear()
 }
