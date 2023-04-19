@@ -24,9 +24,9 @@ interface HabitDao {
             "AND color IN (:selectedColors) " +
             "AND title LIKE '%' || :searchQuery || '%' " +
             "ORDER BY " +
-            "CASE WHEN :isAsc = 1 THEN creationDate END ASC," +
-            "CASE WHEN :isAsc = 0 THEN creationDate END DESC")
-    fun getFilteredAndSortedByCreationDate(
+            "CASE WHEN :isAsc = 1 THEN editDate END ASC," +
+            "CASE WHEN :isAsc = 0 THEN editDate END DESC")
+    fun getFilteredAndSortedByEditDate(
         selectedPriorities: Set<HabitPriority>,
         selectedColors: Set<HabitColor>,
         isAsc: Boolean,

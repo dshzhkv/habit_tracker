@@ -17,7 +17,7 @@ data class Filter(
 )
 
 class HabitsListViewModel(private val repository: HabitRepository): ViewModel() {
-    private var _sortType: SortType = SortType.CREATION_DATE_DESCENDING
+    private var _sortType: SortType = SortType.EDIT_DATE_DESCENDING
     private var _selectedPriorities: MutableSet<HabitPriority> = mutableSetOf()
     private var _selectedColors: MutableSet<HabitColor> = mutableSetOf()
     private var _searchQuery: String = ""
@@ -98,7 +98,7 @@ class HabitsListViewModel(private val repository: HabitRepository): ViewModel() 
     }
 
     private fun resetFilters() {
-        _sortType = SortType.CREATION_DATE_DESCENDING
+        _sortType = SortType.EDIT_DATE_DESCENDING
 
         _selectedPriorities.addAll(HabitPriority.values())
         selectedPrioritiesMutableLiveData.value = _selectedPriorities

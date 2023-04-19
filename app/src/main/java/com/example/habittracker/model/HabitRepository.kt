@@ -10,7 +10,7 @@ import kotlinx.coroutines.withContext
 
 class HabitRepository(private val habitDao: HabitDao, private val service: HabitService) {
 
-    var habits: LiveData<List<Habit>> = habitDao.getAll()
+    val habits: LiveData<List<Habit>> = habitDao.getAll()
 
     suspend fun getHabitsFromServer() =
         withContext(Dispatchers.IO) {
@@ -36,8 +36,8 @@ class HabitRepository(private val habitDao: HabitDao, private val service: Habit
 
     fun applyFilters(filter: Filter): LiveData<List<Habit>> =
         when (filter.sortType) {
-            SortType.CREATION_DATE_DESCENDING, SortType.CREATION_DATE_ASCENDING ->
-                habitDao.getFilteredAndSortedByCreationDate(filter.priorities, filter.colors,
+            SortType.EDIT_DATE_DESCENDING, SortType.EDIT_DATE_ASCENDING ->
+                habitDao.getFilteredAndSortedByEditDate(filter.priorities, filter.colors,
                     filter.sortType.isAsc, filter.searchQuery)
             SortType.PRIORITY_DESCENDING, SortType.PRIORITY_ASCENDING ->
                 habitDao.getFilteredAndSortedByPriority(filter.priorities, filter.colors,

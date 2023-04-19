@@ -16,7 +16,7 @@ class HabitJsonSerializer: JsonSerializer<Habit> {
         JsonObject().apply {
             addProperty("color", src.color.colorId)
             addProperty("count", src.repetitionTimes)
-            addProperty("date", src.creationDate.time)
+            addProperty("date", src.editDate.time)
             if (src.description == null || src.description.isEmpty()) {
                 addProperty("description", EMPTY_DESCRIPTION)
             } else {

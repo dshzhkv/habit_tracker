@@ -12,6 +12,6 @@ data class Habit(
     val repetitionPeriod: Period,
     val description: String?,
     val color: HabitColor,
-    val creationDate: Date,
+    val editDate: Date,
     @PrimaryKey val id: String = "",
 ) : java.io.Serializable
