@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.ListAdapter
 import com.example.habittracker.databinding.HabitCardBinding
-import com.example.habittracker.entities.Habit
+import com.example.domain.entities.Habit
 
 class HabitAdapter(private val navController: NavController)
     : ListAdapter<Habit, HabitViewHolder>(HabitDiffUtil()) {

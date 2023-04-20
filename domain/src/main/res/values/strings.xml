@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name" translatable="false">domain</string>
+
+    <string name="gradient_color1" translatable="false">Rainbow Bright</string>
+    <string name="gradient_color2" translatable="false">Deep Water</string>
+    <string name="gradient_color3" translatable="false">Valley of Glaciers</string>
+    <string name="gradient_color4" translatable="false">Kings of Sea</string>
+    <string name="gradient_color5" translatable="false">Azure Tide</string>
+    <string name="gradient_color6" translatable="false">Stamp Pad Green</string>
+    <string name="gradient_color7" translatable="false">Laurel Wreath</string>
+    <string name="gradient_color8" translatable="false">Green Goddess</string>
+    <string name="gradient_color9" translatable="false">Death Guard</string>
+    <string name="gradient_color10" translatable="false">Savannah Grass</string>
+    <string name="gradient_color11" translatable="false">Highlight Gold</string>
+    <string name="gradient_color12" translatable="false">Cameleer</string>
+    <string name="gradient_color13" translatable="false">Golden Nugget</string>
+    <string name="gradient_color14" translatable="false">Flaming Torch</string>
+    <string name="gradient_color15" translatable="false">Terracotta</string>
+    <string name="gradient_color16" translatable="false">Orange Vermilion</string>
+
+    <string name="bad_habit">Вредная</string>
+    <string name="good_habit">Полезная</string>
+
+    <string name="high_priority">Очень важно</string>
+    <string name="medium_priority">Достаточно важно</string>
+    <string name="low_priority">Не очень важно</string>
+
+    <string name="day">день</string>
+    <string name="week">неделю</string>
+    <string name="month">месяц</string>
+    <string name="year">год</string>
+    <string name="never">Никогда</string>
+    <string name="every_day">Ежедневно</string>
+
+    <string name="sort_by_priority_ascending">Сначала менее важные</string>
+    <string name="sort_by_priority_descending">Сначала более важные</string>
+    <string name="sort_by_creation_date_ascending">Сначала старые</string>
+    <string name="sort_by_creation_date_descending">Сначала новые</string>
+</resources>

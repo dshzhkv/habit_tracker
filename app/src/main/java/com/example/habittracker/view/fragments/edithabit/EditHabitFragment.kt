@@ -16,12 +16,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.habittracker.*
 import com.example.habittracker.databinding.FragmentEditHabitBinding
-import com.example.habittracker.entities.*
 import com.example.habittracker.extensions.customGetSerializable
+import com.example.domain.entities.*
+import com.example.domain.usecases.EditHabitUseCase
+import com.example.habittracker.application.HabitTrackerApplication
 import com.example.habittracker.view.fragments.colorpicker.ColorPickerDialogFragment
 import com.example.habittracker.viewmodel.EditHabitViewModel
 import com.example.habittracker.viewmodel.EditHabitViewModelFactory
 import java.util.*
+import javax.inject.Inject
 
 
 const val ARG_HABIT_ID = "habitId"
@@ -37,7 +40,10 @@ class EditHabitFragment : Fragment() {
     private lateinit var activityContext: Context
 
     private var habitId: String? = null
+    private var habitDoneDates: List<Date> = listOf()
     private var selectedColor: HabitColor = HabitColor.defaultColor()
+    @Inject
+    lateinit var editHabitUseCase: EditHabitUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,14 +65,18 @@ class EditHabitFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity?.application as HabitTrackerApplication).applicationComponent.inject(this)
+
         viewModel = ViewModelProvider(this,
-            EditHabitViewModelFactory((activity?.application as HabitTrackerApplication).repository, habitId))[EditHabitViewModel::class.java]
+            EditHabitViewModelFactory(editHabitUseCase, habitId))[EditHabitViewModel::class.java]
 
         activityContext = activity as Context
 
         viewModel.habit.observe(viewLifecycleOwner) { habit ->
             if (habit != null) {
                 autofill(habit)
+
+                habitDoneDates = habit.doneDates
 
                 binding.deleteButton.visibility = View.VISIBLE
                 binding.deleteButton.setOnClickListener {
@@ -200,6 +210,7 @@ class EditHabitFragment : Fragment() {
             description,
             selectedColor,
             Date(),
+            habitDoneDates,
             habitId ?: ""
         )
     }

@@ -2,28 +2,20 @@ package com.example.habittracker.viewmodel
 
 
 import androidx.lifecycle.*
-import com.example.habittracker.entities.*
-import com.example.habittracker.model.HabitRepository
+import com.example.domain.entities.*
+import com.example.domain.usecases.FilterHabitsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-data class Filter(
-    val habits: LiveData<List<Habit>>,
-    var priorities: MutableSet<HabitPriority>,
-    var colors: MutableSet<HabitColor>,
-    var sortType: SortType,
-    var searchQuery: String,
-)
-
-class HabitsListViewModel(private val repository: HabitRepository): ViewModel() {
+class HabitsListViewModel(private val filterHabitsUseCase: FilterHabitsUseCase): ViewModel() {
     private var _sortType: SortType = SortType.EDIT_DATE_DESCENDING
     private var _selectedPriorities: MutableSet<HabitPriority> = mutableSetOf()
     private var _selectedColors: MutableSet<HabitColor> = mutableSetOf()
     private var _searchQuery: String = ""
 
     private var filter: MutableLiveData<Filter> = MutableLiveData<Filter>(Filter(
-        repository.habits,
+        filterHabitsUseCase.habits.asLiveData(),
         _selectedPriorities,
         _selectedColors,
         _sortType,
@@ -42,8 +34,8 @@ class HabitsListViewModel(private val repository: HabitRepository): ViewModel() 
         resetFilters()
         applyFilters()
 
-        habits = Transformations.switchMap(filter) { filter ->
-            repository.applyFilters(filter)
+        habits = filter.switchMap { filter ->
+            filterHabitsUseCase.applyFilters(filter).asLiveData()
         }
 
         getHabits()
@@ -51,7 +43,7 @@ class HabitsListViewModel(private val repository: HabitRepository): ViewModel() 
 
     private fun getHabits() =
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getHabitsFromServer()
+            filterHabitsUseCase.getHabits()
         }
 
     fun <T> removeFromFilter(option: T, filterType: FilterType) {
@@ -111,7 +103,7 @@ class HabitsListViewModel(private val repository: HabitRepository): ViewModel() 
 
     private fun applyFilters() {
         filter.value = Filter(
-            repository.habits,
+            filterHabitsUseCase.habits.asLiveData(),
             _selectedPriorities,
             _selectedColors,
             _sortType,

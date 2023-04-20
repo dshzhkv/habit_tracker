@@ -7,26 +7,32 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
-import com.example.habittracker.HabitTrackerApplication
+import com.example.habittracker.application.HabitTrackerApplication
 import com.example.habittracker.view.fragments.habitslist.HabitsListAdapter
 import com.example.habittracker.R
-import com.example.habittracker.entities.HabitType
+import com.example.domain.entities.HabitType
+import com.example.domain.usecases.FilterHabitsUseCase
 import com.example.habittracker.view.fragments.filterbottomsheet.FilterBottomSheetFragment
 import com.example.habittracker.viewmodel.HabitsListViewModel
 import com.example.habittracker.viewmodel.HabitsListViewModelFactory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import javax.inject.Inject
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
     private lateinit var viewModel: HabitsListViewModel
+    @Inject
+    lateinit var filterHabitsUseCase: FilterHabitsUseCase
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity?.application as HabitTrackerApplication).applicationComponent.inject(this)
+
         viewModel = ViewModelProvider(activity as ViewModelStoreOwner,
-            HabitsListViewModelFactory((activity?.application as HabitTrackerApplication).repository))[HabitsListViewModel::class.java]
+            HabitsListViewModelFactory(filterHabitsUseCase))[HabitsListViewModel::class.java]
 
         val viewPager: ViewPager2 = view.findViewById(R.id.type_habits_list)
         val habitsListAdapter = HabitsListAdapter(this)

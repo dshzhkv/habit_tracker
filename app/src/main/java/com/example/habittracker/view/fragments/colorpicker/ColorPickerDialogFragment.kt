@@ -15,13 +15,13 @@ import androidx.core.view.setMargins
 import androidx.fragment.app.DialogFragment
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentColorPickerBinding
-import com.example.habittracker.entities.HabitColor
+import com.example.domain.entities.HabitColor
 import com.example.habittracker.extensions.customGetSerializable
 import com.example.habittracker.view.fragments.edithabit.BUNDLE_KEY
 import com.example.habittracker.view.fragments.edithabit.REQUEST_KEY
-import com.example.habittracker.toHex
-import com.example.habittracker.toHsv
-import com.example.habittracker.toRgb
+import com.example.habittracker.extensions.toHex
+import com.example.habittracker.extensions.toHsv
+import com.example.habittracker.extensions.toRgb
 import com.google.android.material.button.MaterialButton
 
 private const val ARG_DEFAULT_COLOR = "default_color"

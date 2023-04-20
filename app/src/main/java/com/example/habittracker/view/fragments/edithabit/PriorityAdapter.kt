@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.habittracker.R
-import com.example.habittracker.entities.HabitPriority
+import com.example.domain.entities.HabitPriority
 
 class PriorityAdapter(
     private val context: Context,

@@ -1,0 +1,22 @@
+<resources>
+    <string name="bad_habit">Bad habit</string>
+    <string name="good_habit">Good habit</string>
+
+    <string name="high_priority">Very important</string>
+    <string name="medium_priority">Important enough</string>
+    <string name="low_priority">Not very important</string>
+
+
+    <string name="day">day</string>
+    <string name="week">week</string>
+    <string name="month">month</string>
+    <string name="year">year</string>
+    <string name="never">Never</string>
+    <string name="every_day">Every day</string>
+
+
+    <string name="sort_by_priority_ascending">More important first</string>
+    <string name="sort_by_priority_descending">Less important first</string>
+    <string name="sort_by_creation_date_ascending">Old first</string>
+    <string name="sort_by_creation_date_descending">New first</string>
+</resources>

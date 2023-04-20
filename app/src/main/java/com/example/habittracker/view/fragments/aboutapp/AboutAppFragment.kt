@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentAboutAppBinding
 import com.example.habittracker.databinding.HabitCardBinding
-import com.example.habittracker.entities.HabitPriority
-import com.example.habittracker.entities.HabitType
+import com.example.domain.entities.HabitPriority
+import com.example.domain.entities.HabitType
 
 class AboutAppFragment : Fragment() {
 
@@ -32,12 +32,12 @@ class AboutAppFragment : Fragment() {
         setupHabitExample(binding.goodHabitExample, R.string.about_app_good_habit_title,
             HabitType.GOOD, HabitPriority.MEDIUM,
             R.string.about_app_good_habit_repeat_information,
-            R.string.about_app_good_habit_description, R.color.gradient_color11)
+            R.string.about_app_good_habit_description, R.color.example_color_2)
 
         setupHabitExample(binding.badHabitExample, R.string.about_app_bad_habit_title,
             HabitType.BAD, HabitPriority.HIGH,
             R.string.about_app_bad_habit_repeat_information,
-            R.string.about_app_bad_habit_description, R.color.gradient_color3)
+            R.string.about_app_bad_habit_description, R.color.example_color_1)
     }
 
     private fun setupHabitExample(habitCard: HabitCardBinding, titleTextId: Int, habitType: HabitType,

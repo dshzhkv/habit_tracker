@@ -6,10 +6,10 @@ import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habittracker.R
 import com.example.habittracker.databinding.HabitCardBinding
-import com.example.habittracker.entities.Habit
-import com.example.habittracker.entities.HabitPriority
-import com.example.habittracker.entities.HabitType
-import com.example.habittracker.entities.Period
+import com.example.domain.entities.Habit
+import com.example.domain.entities.HabitPriority
+import com.example.domain.entities.HabitType
+import com.example.domain.entities.Period
 import com.example.habittracker.view.fragments.main.MainFragmentDirections
 
 
