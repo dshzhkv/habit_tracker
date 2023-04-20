@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.example.habittracker.entities.Habit
 
 @Database(entities = [Habit::class], version = 1, exportSchema = true)
-@TypeConverters(Converter::class)
+@TypeConverters(DatabaseConverter::class)
 abstract class HabitDatabase : RoomDatabase() {
     abstract fun habitDao() : HabitDao
 

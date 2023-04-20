@@ -36,18 +36,14 @@ class EditHabitFragment : Fragment() {
     private lateinit var binding: FragmentEditHabitBinding
     private lateinit var activityContext: Context
 
-    private var habitId: Long? = null
+    private var habitId: String? = null
     private var selectedColor: HabitColor = HabitColor.defaultColor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            habitId = if (it.getLong(ARG_HABIT_ID) == -1L) {
-                null
-            } else {
-                it.getLong(ARG_HABIT_ID)
-            }
+            habitId = it.getString(ARG_HABIT_ID)
         }
     }
 
@@ -204,7 +200,7 @@ class EditHabitFragment : Fragment() {
             description,
             selectedColor,
             Date(),
-            habitId ?: 0
+            habitId ?: ""
         )
     }
 

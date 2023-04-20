@@ -4,7 +4,7 @@ import androidx.room.TypeConverter
 import com.example.habittracker.entities.HabitPriority
 import java.util.*
 
-class Converter {
+class DatabaseConverter {
     @TypeConverter
     fun toDate(dateLong: Long?): Date? {
         return if (dateLong == null) null else Date(dateLong)

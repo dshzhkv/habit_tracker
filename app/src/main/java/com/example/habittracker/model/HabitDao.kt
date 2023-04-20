@@ -1,23 +1,20 @@
 package com.example.habittracker.model
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Query
-import androidx.room.Upsert
+import androidx.room.*
 import com.example.habittracker.entities.*
 
 @Dao
 interface HabitDao {
 
     @Upsert
-    fun createOrUpdate(habit: Habit)
+    suspend fun createOrUpdate(habit: Habit)
 
     @Delete
-    fun delete(habit: Habit)
+    suspend fun delete(habit: Habit)
 
     @Query("SELECT * FROM habit WHERE id LIKE :id")
-    fun getHabit(id: Long?): LiveData<Habit?>
+    fun getHabit(id: String?): LiveData<Habit?>
 
     @Query("SELECT * FROM habit")
     fun getAll(): LiveData<List<Habit>>
@@ -27,9 +24,9 @@ interface HabitDao {
             "AND color IN (:selectedColors) " +
             "AND title LIKE '%' || :searchQuery || '%' " +
             "ORDER BY " +
-            "CASE WHEN :isAsc = 1 THEN creationDate END ASC," +
-            "CASE WHEN :isAsc = 0 THEN creationDate END DESC")
-    fun getFilteredAndSortedByCreationDate(
+            "CASE WHEN :isAsc = 1 THEN editDate END ASC," +
+            "CASE WHEN :isAsc = 0 THEN editDate END DESC")
+    fun getFilteredAndSortedByEditDate(
         selectedPriorities: Set<HabitPriority>,
         selectedColors: Set<HabitColor>,
         isAsc: Boolean,
@@ -48,4 +45,9 @@ interface HabitDao {
         isAsc: Boolean,
         searchQuery: String): LiveData<List<Habit>>
 
+    @Insert
+    fun insert(habits: List<Habit>)
+
+    @Query("DELETE FROM habit")
+    fun clear()
 }
