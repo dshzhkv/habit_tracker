@@ -14,5 +14,6 @@ data class Habit(
     val color: HabitColor,
     val editDate: Date,
     val doneDates: List<Date>,
+    val doneTimes: Int,
     @PrimaryKey val id: String = "",
 ) : java.io.Serializable

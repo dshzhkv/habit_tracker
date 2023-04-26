@@ -1,6 +1,7 @@
 package com.example.habittracker.view.fragments.habitslist.habitadapter
 
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
@@ -11,14 +12,15 @@ import com.example.domain.entities.HabitPriority
 import com.example.domain.entities.HabitType
 import com.example.domain.entities.Period
 import com.example.habittracker.view.fragments.main.MainFragmentDirections
+import com.example.habittracker.viewmodel.EditHabitViewModel
 
 
 class HabitViewHolder(private val binding: HabitCardBinding,
-                      private val navController: NavController)
+                      private val navController: NavController,
+                      private val viewModel: EditHabitViewModel)
     : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(habit: Habit) {
-
         binding.title.text = habit.title
         bindType(habit.type)
         bindPriority(habit.priority)
@@ -28,6 +30,33 @@ class HabitViewHolder(private val binding: HabitCardBinding,
 
         itemView.setOnClickListener {
             navController.navigate(MainFragmentDirections.actionMainFragmentToEditHabitFragment(habit.id))
+        }
+
+        setOnCheckListener(habit)
+    }
+
+    private fun setOnCheckListener(habit: Habit) {
+        binding.checkHabitButton.setOnClickListener {
+            viewModel.checkHabit(habit.id)
+            val (isHabitDone, doneTimes) = viewModel.isHabitDone(habit)
+            var message: String = when (isHabitDone) {
+                true -> {
+                    when (habit.type) {
+                        HabitType.GOOD -> itemView.context.getString(R.string.good_habit_done)
+                        HabitType.BAD -> itemView.context.getString(R.string.bad_habit_not_ok)
+                    }
+                }
+                false -> {
+                    when (habit.type) {
+                        HabitType.GOOD -> itemView.context.getString(R.string.good_habit_not_done)
+                        HabitType.BAD -> itemView.context.getString(R.string.bad_habit_ok)
+                    }
+                }
+            }
+            message += " ${doneTimes}/${habit.repetitionTimes}"
+            Toast
+                .makeText(itemView.context, message, Toast.LENGTH_SHORT)
+                .show()
         }
     }
 

@@ -12,11 +12,11 @@ interface HabitDao {
     @Upsert
     suspend fun createOrUpdate(habit: Habit)
 
-    @Delete
-    suspend fun delete(habit: Habit)
+    @Query("DELETE FROM habit WHERE id LIKE :id")
+    suspend fun delete(id: String)
 
     @Query("SELECT * FROM habit WHERE id LIKE :id")
-    fun getHabit(id: String?): Flow<Habit?>
+    fun getHabit(id: String?): Habit?
 
     @Query("SELECT * FROM habit")
     fun getAll(): Flow<List<Habit>>

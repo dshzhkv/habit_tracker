@@ -27,12 +27,33 @@
             android:orientation="vertical"
             android:layout_marginHorizontal="@dimen/habit_card_section_margin">
 
-            <TextView android:id="@+id/title"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/habit_card_main_section_items_margin"
-                android:textAppearance="@style/Text.MainText"
-                tools:text="Название"/>
+                android:layout_marginVertical="@dimen/habit_card_main_section_items_margin">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/Text.MainText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Название" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/check_habit_button"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/button"
+                    android:backgroundTint="@color/green"
+                    android:drawableStart="@drawable/ic_plus"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"

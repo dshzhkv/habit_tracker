@@ -3,6 +3,7 @@ package com.example.domain
 import com.example.domain.entities.Filter
 import com.example.domain.entities.Habit
 import kotlinx.coroutines.flow.Flow
+import java.util.Date
 
 interface HabitRepository {
 
@@ -12,9 +13,11 @@ interface HabitRepository {
 
     suspend fun createOrUpdate(habit: Habit)
 
-    suspend fun delete(habit: Habit)
+    suspend fun delete(habitId: String)
 
-    fun getHabit(id: String?): Flow<Habit?>
+    suspend fun checkHabit(date: Date, habitId: String)
+
+    fun getHabit(id: String?): Habit?
 
     fun applyFilters(filter: Filter): Flow<List<Habit>>
 }

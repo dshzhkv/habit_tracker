@@ -13,9 +13,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 import com.example.domain.entities.Habit
 import com.example.data.db.HabitDatabaseImpl
-import com.example.data.HabitJsonDeserializer
-import com.example.data.HabitJsonSerializer
+import com.example.data.entities.HabitDoneBody
+import com.example.data.service.HabitJsonDeserializer
+import com.example.data.service.HabitJsonSerializer
 import com.example.data.repository.HabitRepositoryImpl
+import com.example.data.service.HabitDoneBodySerializer
 import com.example.data.service.HabitService
 import com.example.domain.HabitRepository
 import com.example.domain.usecases.EditHabitUseCase
@@ -57,6 +59,7 @@ class DaggerModule(private val context: Context) {
         GsonBuilder()
             .registerTypeAdapter(Habit::class.java, HabitJsonSerializer())
             .registerTypeAdapter(Habit::class.java, HabitJsonDeserializer())
+            .registerTypeAdapter(HabitDoneBody::class.java, HabitDoneBodySerializer())
             .create()
 
     @Singleton

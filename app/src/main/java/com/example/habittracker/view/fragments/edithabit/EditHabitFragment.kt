@@ -68,25 +68,25 @@ class EditHabitFragment : Fragment() {
         (activity?.application as HabitTrackerApplication).applicationComponent.inject(this)
 
         viewModel = ViewModelProvider(this,
-            EditHabitViewModelFactory(editHabitUseCase, habitId))[EditHabitViewModel::class.java]
+            EditHabitViewModelFactory(editHabitUseCase))[EditHabitViewModel::class.java]
 
         activityContext = activity as Context
 
-        viewModel.habit.observe(viewLifecycleOwner) { habit ->
-            if (habit != null) {
-                autofill(habit)
+        val habit = viewModel.getHabit(habitId)
+        if (habit != null) {
+            autofill(habit)
 
-                habitDoneDates = habit.doneDates
+            habitDoneDates = habit.doneDates
 
-                binding.deleteButton.visibility = View.VISIBLE
-                binding.deleteButton.setOnClickListener {
-                    viewModel.deleteHabit(habit)
-                    findNavController().popBackStack()
-                }
-            } else {
-                binding.deleteButton.visibility = View.GONE
+            binding.deleteButton.visibility = View.VISIBLE
+            binding.deleteButton.setOnClickListener {
+                viewModel.deleteHabit(habit.id)
+                findNavController().popBackStack()
             }
+        } else {
+            binding.deleteButton.visibility = View.GONE
         }
+
 
         setListenerOnTitleEditText()
         setListenerOnTypeRadioGroup()
@@ -211,6 +211,7 @@ class EditHabitFragment : Fragment() {
             selectedColor,
             Date(),
             habitDoneDates,
+            0,
             habitId ?: ""
         )
     }
