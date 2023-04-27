@@ -24,7 +24,7 @@ import com.example.domain.usecases.EditHabitUseCase
 import com.example.domain.usecases.FilterHabitsUseCase
 
 @Module
-class DaggerModule(private val context: Context) {
+class ApplicationModule(private val context: Context) {
     @Provides
     fun provideContext(): Context = context
 

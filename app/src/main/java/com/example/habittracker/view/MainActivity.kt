@@ -6,6 +6,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -15,6 +16,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.habittracker.R
+import com.example.habittracker.application.HabitTrackerApplication
 import com.google.android.material.navigation.NavigationView
 
 
@@ -27,6 +29,8 @@ class MainActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (application as HabitTrackerApplication).initViewModelComponent(this as ViewModelStoreOwner)
+
         setContentView(R.layout.activity_main)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)

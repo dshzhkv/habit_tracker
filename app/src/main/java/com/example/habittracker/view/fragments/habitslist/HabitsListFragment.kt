@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -13,26 +11,20 @@ import com.example.habittracker.application.HabitTrackerApplication
 import com.example.habittracker.viewmodel.HabitsListViewModel
 import com.example.habittracker.R
 import com.example.domain.entities.HabitType
-import com.example.domain.usecases.EditHabitUseCase
-import com.example.domain.usecases.FilterHabitsUseCase
 import com.example.habittracker.extensions.customGetSerializable
 import com.example.habittracker.view.fragments.habitslist.habitadapter.HabitAdapter
 import com.example.habittracker.viewmodel.EditHabitViewModel
-import com.example.habittracker.viewmodel.EditHabitViewModelFactory
-import com.example.habittracker.viewmodel.HabitsListViewModelFactory
 import javax.inject.Inject
 
 private const val ARG_TYPE = "type"
 
 class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
 
-    private lateinit var habitsListViewModel: HabitsListViewModel
-    private lateinit var editHabitViewModel: EditHabitViewModel
+    @Inject
+    lateinit var habitsListViewModel: HabitsListViewModel
+    @Inject
+    lateinit var editHabitViewModel: EditHabitViewModel
     private lateinit var type: HabitType
-    @Inject
-    lateinit var filterHabitsUseCase: FilterHabitsUseCase
-    @Inject
-    lateinit var editHabitUseCase: EditHabitUseCase
 
     companion object {
         fun newInstance(type: HabitType) = HabitsListFragment().apply {
@@ -53,13 +45,7 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity?.application as HabitTrackerApplication).applicationComponent.inject(this)
-
-        habitsListViewModel = ViewModelProvider(activity as ViewModelStoreOwner,
-            HabitsListViewModelFactory(filterHabitsUseCase))[HabitsListViewModel::class.java]
-
-        editHabitViewModel = ViewModelProvider(activity as ViewModelStoreOwner,
-            EditHabitViewModelFactory(editHabitUseCase))[EditHabitViewModel::class.java]
+        (activity?.application as HabitTrackerApplication).viewModelComponent.inject(this)
 
         val recyclerView: RecyclerView = view.findViewById(R.id.habits_list)
         val navController: NavController = findNavController()

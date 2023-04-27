@@ -10,8 +10,6 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.contains
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import com.example.habittracker.application.HabitTrackerApplication
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentFilterBottomSheetBinding
@@ -19,9 +17,7 @@ import com.example.domain.entities.FilterType
 import com.example.domain.entities.HabitColor
 import com.example.domain.entities.HabitPriority
 import com.example.domain.entities.SortType
-import com.example.domain.usecases.FilterHabitsUseCase
 import com.example.habittracker.viewmodel.HabitsListViewModel
-import com.example.habittracker.viewmodel.HabitsListViewModelFactory
 import javax.inject.Inject
 
 
@@ -33,11 +29,10 @@ class MultiSelectOptions<T>(
 
 class FilterBottomSheetFragment : Fragment() {
 
-    private lateinit var viewModel: HabitsListViewModel
+    @Inject
+    lateinit var viewModel: HabitsListViewModel
     private lateinit var activityContext: Context
     private lateinit var binding: FragmentFilterBottomSheetBinding
-    @Inject
-    lateinit var filterHabitsUseCase: FilterHabitsUseCase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,10 +46,7 @@ class FilterBottomSheetFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity?.application as HabitTrackerApplication).applicationComponent.inject(this)
-
-        viewModel = ViewModelProvider(activity as ViewModelStoreOwner,
-            HabitsListViewModelFactory(filterHabitsUseCase))[HabitsListViewModel::class.java]
+        (activity?.application as HabitTrackerApplication).viewModelComponent.inject(this)
 
         activityContext = activity as Context
 

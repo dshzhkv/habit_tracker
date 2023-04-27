@@ -12,17 +12,14 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.habittracker.*
 import com.example.habittracker.databinding.FragmentEditHabitBinding
 import com.example.habittracker.extensions.customGetSerializable
 import com.example.domain.entities.*
-import com.example.domain.usecases.EditHabitUseCase
 import com.example.habittracker.application.HabitTrackerApplication
 import com.example.habittracker.view.fragments.colorpicker.ColorPickerDialogFragment
 import com.example.habittracker.viewmodel.EditHabitViewModel
-import com.example.habittracker.viewmodel.EditHabitViewModelFactory
 import java.util.*
 import javax.inject.Inject
 
@@ -35,15 +32,14 @@ const val BUNDLE_KEY = "selectedColor"
 
 class EditHabitFragment : Fragment() {
 
-    private lateinit var viewModel: EditHabitViewModel
+    @Inject
+    lateinit var viewModel: EditHabitViewModel
     private lateinit var binding: FragmentEditHabitBinding
     private lateinit var activityContext: Context
 
     private var habitId: String? = null
     private var habitDoneDates: List<Date> = listOf()
     private var selectedColor: HabitColor = HabitColor.defaultColor()
-    @Inject
-    lateinit var editHabitUseCase: EditHabitUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,10 +61,7 @@ class EditHabitFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity?.application as HabitTrackerApplication).applicationComponent.inject(this)
-
-        viewModel = ViewModelProvider(this,
-            EditHabitViewModelFactory(editHabitUseCase))[EditHabitViewModel::class.java]
+        (activity?.application as HabitTrackerApplication).viewModelComponent.inject(this)
 
         activityContext = activity as Context
 
