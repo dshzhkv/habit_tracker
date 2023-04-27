@@ -30,15 +30,49 @@ class HabitRepositoryImpl(private val habitDao: HabitDao, private val service: H
                     habitDao.insert(habitsFromServer)
                 } else {
                     notSyncedHabits.forEach {
-                        try {
-                            createOrUpdate(it.copy(id = ""))
-                            habitDao.delete(it.id)
-                        } catch (_: java.lang.Exception) { }
+                        val remoteHabit = habitsFromServer.find { habit -> habit.id == it.id }
+                        if (remoteHabit != null) {
+                            syncNotUpdated(it, remoteHabit)
+                        } else {
+                            syncNotCreated(it)
+                        }
                     }
-                    habitsFromServer.filter { !localHabits.contains(it) }.forEach { delete(it.id) }
+                    syncNotDeleted(habitsFromServer.filter { isHabitDeletedLocally(it.id, localHabits) })
                 }
             } catch (_: Exception) {}
     }
+
+    private suspend fun syncNotCreated(habit: Habit) {
+        val response = service.addOrUpdateHabit(habit.copy(id = ""))
+        habitDao.createOrUpdate(habit.copy(id = response.uid, isSynced = false))
+        habitDao.delete(habit.id)
+        syncChecks(habit, null, response.uid)
+        habitDao.createOrUpdate(habit.copy(id = response.uid, isSynced = true))
+    }
+
+    private suspend fun syncNotUpdated(localHabit: Habit, remoteHabit: Habit) {
+        if (localHabit.editDate > remoteHabit.editDate) {
+            service.addOrUpdateHabit(localHabit)
+        }
+        if (localHabit.doneDates.size != remoteHabit.doneDates.size) {
+            syncChecks(localHabit, remoteHabit, localHabit.id)
+        }
+        habitDao.createOrUpdate(localHabit.copy(isSynced = true))
+    }
+
+    private suspend fun syncChecks(habit: Habit, remoteHabit: Habit?, id: String) =
+        habit.doneDates.forEach {
+            if (remoteHabit == null || !remoteHabit.doneDates.contains(it)) {
+                service.checkHabit(HabitDoneBody(it, id))
+            }
+        }
+
+    private suspend fun syncNotDeleted(notDeleted: List<Habit>) =
+        notDeleted.forEach { service.deleteHabit(DeleteHabitBody(it.id)) }
+
+
+    private fun isHabitDeletedLocally(habitId: String, localHabits: List<Habit>) =
+        localHabits.find { it.id == habitId } == null
 
     override suspend fun createOrUpdate(habit: Habit): Unit =
         withContext(Dispatchers.IO) {
@@ -55,7 +89,9 @@ class HabitRepositoryImpl(private val habitDao: HabitDao, private val service: H
         }
 
     private suspend fun generateId(): String =
-        habitDao.getAll().first().filter { !it.isSynced }.size.toString()
+        withContext(Dispatchers.IO) {
+            habitDao.getAll().first().filter { !it.isSynced }.size.toString()
+        }
 
     override suspend fun delete(habitId: String) =
         withContext(Dispatchers.IO) {
@@ -67,12 +103,25 @@ class HabitRepositoryImpl(private val habitDao: HabitDao, private val service: H
 
     override suspend fun checkHabit(date: Date, habitId: String) =
         withContext(Dispatchers.IO) {
-            service.checkHabit(HabitDoneBody(date, habitId))
-            val updatedHabit = service.getAllHabits().find { it.id == habitId }
-            if (updatedHabit != null) {
-                habitDao.createOrUpdate(updatedHabit)
+            try {
+                service.checkHabit(HabitDoneBody(date, habitId))
+                checkHabitLocally(date, habitId, true)
+            } catch (_: Exception) {
+                checkHabitLocally(date, habitId, false)
             }
         }
+
+    private suspend fun checkHabitLocally(date: Date, habitId: String, isSynced: Boolean) {
+        withContext(Dispatchers.IO) {
+            val habit = getHabit(habitId)
+            if (habit != null) {
+                val doneDates = habit.doneDates.toMutableList()
+                doneDates.add(date)
+                habitDao.createOrUpdate(habit.copy(doneDates = doneDates,
+                    doneTimes = doneDates.size, isSynced = isSynced))
+            }
+        }
+    }
 
     override fun getHabit(id: String?): Habit? =
         habitDao.getHabit(id)
