@@ -14,11 +14,8 @@ import javax.inject.Singleton
 import com.example.domain.entities.Habit
 import com.example.data.db.HabitDatabaseImpl
 import com.example.data.entities.HabitDoneBody
-import com.example.data.service.HabitJsonDeserializer
-import com.example.data.service.HabitJsonSerializer
 import com.example.data.repository.HabitRepositoryImpl
-import com.example.data.service.HabitDoneBodySerializer
-import com.example.data.service.HabitService
+import com.example.data.service.*
 import com.example.domain.HabitRepository
 import com.example.domain.usecases.EditHabitUseCase
 import com.example.domain.usecases.FilterHabitsUseCase
@@ -57,8 +54,8 @@ class ApplicationModule(private val context: Context) {
     @Provides
     fun provideGson(): Gson =
         GsonBuilder()
-            .registerTypeAdapter(Habit::class.java, HabitJsonSerializer())
-            .registerTypeAdapter(Habit::class.java, HabitJsonDeserializer())
+            .registerTypeAdapter(Habit::class.java, HabitSerializer())
+            .registerTypeAdapter(Habit::class.java, HabitDeserializer())
             .registerTypeAdapter(HabitDoneBody::class.java, HabitDoneBodySerializer())
             .create()
 

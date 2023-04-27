@@ -6,40 +6,7 @@ import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 import java.util.*
 
-
-private const val EMPTY_DESCRIPTION = "empty_description"
-
-class HabitJsonSerializer: JsonSerializer<Habit> {
-    override fun serialize(
-        src: Habit,
-        typeOfSrc: Type,
-        context: JsonSerializationContext
-    ): JsonElement =
-        JsonObject().apply {
-            addProperty("color", src.color.colorId)
-            addProperty("count", src.repetitionTimes)
-            addProperty("date", src.editDate.time)
-            if (src.description == null || src.description.toString().isEmpty()) {
-                addProperty("description", EMPTY_DESCRIPTION)
-            } else {
-                addProperty("description", src.description)
-            }
-
-            val doneDatesJson = JsonArray()
-            src.doneDates.forEach { doneDatesJson.add(it.time) }
-            add("done_dates", doneDatesJson)
-
-            addProperty("frequency", src.repetitionPeriod.ordinal)
-            addProperty("priority", src.priority.value)
-            addProperty("title", src.title)
-            addProperty("type", src.type.ordinal)
-            if (src.id.isNotEmpty()) {
-                addProperty("uid", src.id)
-            }
-        }
-}
-
-class HabitJsonDeserializer: JsonDeserializer<Habit> {
+class HabitDeserializer: JsonDeserializer<Habit> {
     override fun deserialize(
         json: JsonElement,
         typeOfT: Type?,
@@ -67,6 +34,7 @@ class HabitJsonDeserializer: JsonDeserializer<Habit> {
             Date(jsonObject.get("date").asLong),
             doneDates,
             doneTimes,
+            true,
             jsonObject.get("uid").asString,
         )
     }

@@ -10,6 +10,7 @@ import com.example.domain.entities.Habit
 import com.example.domain.entities.SortType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import java.util.*
 
@@ -19,20 +20,49 @@ class HabitRepositoryImpl(private val habitDao: HabitDao, private val service: H
 
     override suspend fun getHabitsFromServer() =
         withContext(Dispatchers.IO) {
-            val habitsFromServer = service.getAllHabits()
-            habitDao.clear()
-            habitDao.insert(habitsFromServer)
+            try {
+                val habitsFromServer = service.getAllHabits()
+                val localHabits = habitDao.getAll().first()
+
+                val notSyncedHabits = localHabits.filter { !it.isSynced }
+                if (notSyncedHabits.isEmpty() && habitsFromServer.size == localHabits.size) {
+                    habitDao.clear()
+                    habitDao.insert(habitsFromServer)
+                } else {
+                    notSyncedHabits.forEach {
+                        try {
+                            createOrUpdate(it.copy(id = ""))
+                            habitDao.delete(it.id)
+                        } catch (_: java.lang.Exception) { }
+                    }
+                    habitsFromServer.filter { !localHabits.contains(it) }.forEach { delete(it.id) }
+                }
+            } catch (_: Exception) {}
     }
 
-    override suspend fun createOrUpdate(habit: Habit) =
+    override suspend fun createOrUpdate(habit: Habit): Unit =
         withContext(Dispatchers.IO) {
-            habitDao.createOrUpdate(habit.copy(id = service.addOrUpdateHabit(habit).uid))
+            try {
+                val response = service.addOrUpdateHabit(habit)
+                habitDao.createOrUpdate(habit.copy(id = response.uid, isSynced = true))
+            } catch (_: Exception) {
+                if (habit.id == "") {
+                    habitDao.createOrUpdate(habit.copy(id = generateId(), isSynced = false))
+                } else {
+                    habitDao.createOrUpdate(habit.copy(isSynced = false))
+                }
+            }
         }
+
+    private suspend fun generateId(): String =
+        habitDao.getAll().first().filter { !it.isSynced }.size.toString()
 
     override suspend fun delete(habitId: String) =
         withContext(Dispatchers.IO) {
             habitDao.delete(habitId)
-            service.deleteHabit(DeleteHabitBody(habitId))
+            try {
+                service.deleteHabit(DeleteHabitBody(habitId))
+            } catch (_: Exception) {}
         }
 
     override suspend fun checkHabit(date: Date, habitId: String) =

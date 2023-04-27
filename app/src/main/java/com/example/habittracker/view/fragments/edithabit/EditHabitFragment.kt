@@ -205,7 +205,8 @@ class EditHabitFragment : Fragment() {
             Date(),
             habitDoneDates,
             0,
-            habitId ?: ""
+            false,
+            habitId ?: "",
         )
     }
 

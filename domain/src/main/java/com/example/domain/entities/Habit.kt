@@ -15,5 +15,6 @@ data class Habit(
     val editDate: Date,
     val doneDates: List<Date>,
     val doneTimes: Int,
+    val isSynced: Boolean,
     @PrimaryKey val id: String = "",
 ) : java.io.Serializable
