@@ -1,13 +1,11 @@
-package com.example.domain.usecases
+package com.example.domain.interactors
 
 import com.example.domain.HabitRepository
 import com.example.domain.entities.Habit
-import com.example.domain.entities.HabitType
 import kotlinx.coroutines.*
-import java.util.*
 import kotlin.coroutines.CoroutineContext
 
-class EditHabitUseCase(private val repository: HabitRepository): CoroutineScope {
+class EditHabitInteractor(private val repository: HabitRepository): CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + SupervisorJob() + CoroutineExceptionHandler {
@@ -22,15 +20,4 @@ class EditHabitUseCase(private val repository: HabitRepository): CoroutineScope 
 
     fun deleteHabit(habitId: String) =
         launch { repository.delete(habitId) }
-
-    fun checkHabit(habitId: String) =
-        launch { repository.checkHabit(Date(), habitId) }
-
-    fun isHabitDone(habit: Habit): Pair<Boolean, Int> {
-        return Pair(
-            when (habit.type) {
-                HabitType.GOOD -> habit.doneTimes + 1 >= habit.repetitionTimes
-                HabitType.BAD -> habit.doneTimes + 1 > habit.repetitionTimes
-            }, habit.doneTimes + 1)
-    }
 }

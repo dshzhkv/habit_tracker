@@ -10,14 +10,13 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.contains
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.example.domain.entities.*
 import com.example.habittracker.application.HabitTrackerApplication
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentFilterBottomSheetBinding
-import com.example.domain.entities.FilterType
-import com.example.domain.entities.HabitColor
-import com.example.domain.entities.HabitPriority
-import com.example.domain.entities.SortType
 import com.example.habittracker.viewmodel.HabitsListViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -86,9 +85,9 @@ class FilterBottomSheetFragment : Fragment() {
                     HabitPriority.LOW to binding.lowPriority
                 )
 
-                viewModel.selectedPriorities.observe(viewLifecycleOwner) {selectedPriorities ->
-                    run {
-                        updatePriorityFilterPlaceholder(selectedPriorities, prioritiesViews, filterView)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.filterFlow.collect {
+                        updatePriorityFilterPlaceholder(it.selectedPriorities, prioritiesViews, filterView)
 
                         options.areChecked = viewModel.getCheckedPriorities()
                         setupMultiSelect(options, FilterType.PRIORITY,
@@ -103,9 +102,9 @@ class FilterBottomSheetFragment : Fragment() {
                     binding.color3)
                 val moreColorsNumber: TextView = binding.moreColorsNumber
 
-                viewModel.selectedColors.observe(viewLifecycleOwner) {colors ->
-                    run {
-                        updateColorFilterPlaceholder(colors, moreColorsNumber, colorViews)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.filterFlow.collect {
+                        updateColorFilterPlaceholder(it.selectedColors, moreColorsNumber, colorViews)
                         options.areChecked = viewModel.getCheckedColors()
                         setupMultiSelect(options, FilterType.COLOR,
                             R.string.bottom_sheet_color_title, filterView)
@@ -116,7 +115,7 @@ class FilterBottomSheetFragment : Fragment() {
     }
 
     private fun updatePriorityFilterPlaceholder(
-        selectedPriorities:MutableSet<HabitPriority>,
+        selectedPriorities:Set<HabitPriority>,
         prioritiesViews: Map<HabitPriority, View>,
         filterByPriority: LinearLayout) {
 
@@ -135,7 +134,7 @@ class FilterBottomSheetFragment : Fragment() {
         }
     }
 
-    private fun updateColorFilterPlaceholder(selectedColors: MutableSet<HabitColor>,
+    private fun updateColorFilterPlaceholder(selectedColors: Set<HabitColor>,
                                              moreColorsNumber: TextView, colorViews: List<View>) {
         val colorsList = selectedColors.toList()
 
@@ -167,11 +166,14 @@ class FilterBottomSheetFragment : Fragment() {
         val dialogBuilder = AlertDialog.Builder(activityContext)
 
         dialogBuilder.setMultiChoiceItems(options.titles, options.areChecked) { _, index, isChecked ->
-            if (isChecked) {
-                viewModel.addToFilter(options.values[index], filterType)
-            } else {
-                viewModel.removeFromFilter(options.values[index], filterType)
-            }
+            viewModel.filter(
+                options.values[index],
+                filterType,
+                when (isChecked) {
+                    true -> FilterAction.ADD
+                    false -> FilterAction.REMOVE
+                }
+            )
         }
             .setTitle(titleId)
 

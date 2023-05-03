@@ -4,16 +4,19 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.domain.entities.Habit
 import com.example.habittracker.application.HabitTrackerApplication
 import com.example.habittracker.viewmodel.HabitsListViewModel
 import com.example.habittracker.R
 import com.example.domain.entities.HabitType
 import com.example.habittracker.extensions.customGetSerializable
 import com.example.habittracker.view.fragments.habitslist.habitadapter.HabitAdapter
-import com.example.habittracker.viewmodel.EditHabitViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val ARG_TYPE = "type"
@@ -21,9 +24,7 @@ private const val ARG_TYPE = "type"
 class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
 
     @Inject
-    lateinit var habitsListViewModel: HabitsListViewModel
-    @Inject
-    lateinit var editHabitViewModel: EditHabitViewModel
+    lateinit var viewModel: HabitsListViewModel
     private lateinit var type: HabitType
 
     companion object {
@@ -49,7 +50,7 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
 
         val recyclerView: RecyclerView = view.findViewById(R.id.habits_list)
         val navController: NavController = findNavController()
-        val habitAdapter = HabitAdapter(navController, editHabitViewModel)
+        val habitAdapter = HabitAdapter(navController) { onCheckHabit(it) }
         recyclerView.adapter = habitAdapter
 
         val noHabitsMessage: TextView = view.findViewById(R.id.no_habits_message)
@@ -58,15 +59,26 @@ class HabitsListFragment : Fragment(R.layout.fragment_habits_list) {
             HabitType.BAD -> getString(R.string.habits_list_no_bad_habits)
         }
 
-        habitsListViewModel.habits.observe(viewLifecycleOwner) { habits ->
-            val habitsOfType = habits.filter { it.type === type }
-            habitAdapter.submitList(habitsOfType)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.habitsFlow.collect { habits ->
+                val habitsOfType = habits.filter { it.type === type }
+                habitAdapter.submitList(habitsOfType)
 
-            if (habitsOfType.isEmpty()) {
-                noHabitsMessage.visibility = View.VISIBLE
-            } else {
-                noHabitsMessage.visibility = View.GONE
+                if (habitsOfType.isEmpty()) {
+                    noHabitsMessage.visibility = View.VISIBLE
+                } else {
+                    noHabitsMessage.visibility = View.GONE
+                }
             }
         }
+    }
+
+    private fun onCheckHabit(habit: Habit) {
+        viewModel.checkHabit(habit.id)
+        val (message, doneTimes) = viewModel.getHabitProgress(habit.id)
+        val toastMessage = "${getString(message.messageId)} ${doneTimes}/${habit.repetitionTimes}"
+        Toast
+            .makeText(context, toastMessage, Toast.LENGTH_SHORT)
+            .show()
     }
 }

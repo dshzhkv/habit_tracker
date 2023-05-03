@@ -19,4 +19,10 @@
     <string name="sort_by_priority_descending">Less important first</string>
     <string name="sort_by_creation_date_ascending">Old first</string>
     <string name="sort_by_creation_date_descending">New first</string>
+
+    <string name="good_habit_done">Well done!</string>
+    <string name="good_habit_not_done">Keep going</string>
+    <string name="bad_habit_ok">It\'s okay. Don\'t give up!</string>
+    <string name="bad_habit_not_ok">Try better next time</string>
+    <string name="check_habit_error">Error while checking habit</string>
 </resources>

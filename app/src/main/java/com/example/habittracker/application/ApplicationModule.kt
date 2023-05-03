@@ -17,8 +17,9 @@ import com.example.data.entities.HabitDoneBody
 import com.example.data.repository.HabitRepositoryImpl
 import com.example.data.service.*
 import com.example.domain.HabitRepository
-import com.example.domain.usecases.EditHabitUseCase
-import com.example.domain.usecases.FilterHabitsUseCase
+import com.example.domain.interactors.CheckHabitInteractor
+import com.example.domain.interactors.EditHabitInteractor
+import com.example.domain.interactors.FilterHabitsInteractor
 
 @Module
 class ApplicationModule(private val context: Context) {
@@ -27,13 +28,18 @@ class ApplicationModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun provideEditHabitUseCase(habitRepository: HabitRepository): EditHabitUseCase =
-        EditHabitUseCase(habitRepository)
+    fun provideEditHabitInteractor(habitRepository: HabitRepository): EditHabitInteractor =
+        EditHabitInteractor(habitRepository)
 
     @Singleton
     @Provides
-    fun provideFilterHabitsUseCase(habitRepository: HabitRepository): FilterHabitsUseCase =
-        FilterHabitsUseCase(habitRepository)
+    fun provideFilterHabitsInteractor(habitRepository: HabitRepository): FilterHabitsInteractor =
+        FilterHabitsInteractor(habitRepository)
+
+    @Singleton
+    @Provides
+    fun provideCheckHabitInteractor(habitRepository: HabitRepository): CheckHabitInteractor =
+        CheckHabitInteractor(habitRepository)
 
     @Singleton
     @Provides

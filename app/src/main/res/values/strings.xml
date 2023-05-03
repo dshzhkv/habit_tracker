@@ -78,9 +78,4 @@
     <string name="sort_by_priority_descending">Сначала более важные</string>
     <string name="sort_by_creation_date_ascending">Сначала старые</string>
     <string name="sort_by_creation_date_descending">Сначала новые</string>
-
-    <string name="good_habit_done">Мега хорош!</string>
-    <string name="good_habit_not_done">Продолжай в том же духе</string>
-    <string name="bad_habit_ok">Никто не идеален. Главное, не сдавайся!</string>
-    <string name="bad_habit_not_ok">Ай-ай-ай…</string>
 </resources>

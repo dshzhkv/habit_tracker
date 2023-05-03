@@ -1,11 +1,11 @@
 package com.example.domain.entities
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 
 data class Filter(
-    val habits: LiveData<List<Habit>>,
-    var priorities: MutableSet<HabitPriority>,
-    var colors: MutableSet<HabitColor>,
+    val habits: Flow<List<Habit>>,
+    var selectedPriorities: Set<HabitPriority>,
+    var selectedColors: Set<HabitColor>,
     var sortType: SortType,
     var searchQuery: String,
 )

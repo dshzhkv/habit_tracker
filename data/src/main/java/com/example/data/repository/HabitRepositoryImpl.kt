@@ -129,10 +129,10 @@ class HabitRepositoryImpl(private val habitDao: HabitDao, private val service: H
     override fun applyFilters(filter: Filter): Flow<List<Habit>> =
         when (filter.sortType) {
             SortType.EDIT_DATE_DESCENDING, SortType.EDIT_DATE_ASCENDING ->
-                habitDao.getFilteredAndSortedByEditDate(filter.priorities, filter.colors,
+                habitDao.getFilteredAndSortedByEditDate(filter.selectedPriorities, filter.selectedColors,
                     filter.sortType.isAsc, filter.searchQuery)
             SortType.PRIORITY_DESCENDING, SortType.PRIORITY_ASCENDING ->
-                habitDao.getFilteredAndSortedByPriority(filter.priorities, filter.colors,
+                habitDao.getFilteredAndSortedByPriority(filter.selectedPriorities, filter.selectedColors,
                     filter.sortType.isAsc, filter.searchQuery)
         }
 }

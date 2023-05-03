@@ -3,131 +3,71 @@ package com.example.habittracker.viewmodel
 
 import androidx.lifecycle.*
 import com.example.domain.entities.*
-import com.example.domain.usecases.FilterHabitsUseCase
+import com.example.domain.interactors.CheckHabitInteractor
+import com.example.domain.interactors.FilterHabitsInteractor
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
 
-class HabitsListViewModel(private val filterHabitsUseCase: FilterHabitsUseCase): ViewModel() {
-    private var _sortType: SortType = SortType.EDIT_DATE_DESCENDING
-    private var _selectedPriorities: MutableSet<HabitPriority> = mutableSetOf()
-    private var _selectedColors: MutableSet<HabitColor> = mutableSetOf()
-    private var _searchQuery: String = ""
+@OptIn(ExperimentalCoroutinesApi::class)
+class HabitsListViewModel(private val filterHabitsInteractor: FilterHabitsInteractor,
+                          private val checkHabitInteractor: CheckHabitInteractor): ViewModel() {
 
-    private var filter: MutableLiveData<Filter> = MutableLiveData<Filter>(Filter(
-        filterHabitsUseCase.habits.asLiveData(),
-        _selectedPriorities,
-        _selectedColors,
-        _sortType,
-        _searchQuery,
+    val filterFlow = MutableStateFlow(Filter(
+        filterHabitsInteractor.habits,
+        mutableSetOf(),
+        mutableSetOf(),
+        SortType.EDIT_DATE_DESCENDING,
+        "",
     ))
 
-    var habits: LiveData<List<Habit>>
-
-    private var selectedPrioritiesMutableLiveData: MutableLiveData<MutableSet<HabitPriority>> = MutableLiveData(_selectedPriorities)
-    private var selectedColorsMutableLiveData: MutableLiveData<MutableSet<HabitColor>> = MutableLiveData(_selectedColors)
-
-    val selectedPriorities: LiveData<MutableSet<HabitPriority>> = selectedPrioritiesMutableLiveData
-    val selectedColors: LiveData<MutableSet<HabitColor>> = selectedColorsMutableLiveData
+    var habitsFlow: Flow<List<Habit>> = filterHabitsInteractor.habits
 
     init {
         resetFilters()
-        applyFilters()
 
-        habits = filter.switchMap { filter ->
-            filterHabitsUseCase.applyFilters(filter).asLiveData()
+        habitsFlow = filterFlow.flatMapLatest { filter ->
+            filterHabitsInteractor.applyFilters(filter)
         }
 
         getHabits()
     }
 
-    private fun getHabits() =
-        viewModelScope.launch(Dispatchers.IO) {
-            filterHabitsUseCase.getHabits()
-        }
-
-    fun <T> removeFromFilter(option: T, filterType: FilterType) {
-        when (filterType) {
-            FilterType.PRIORITY -> {
-                _selectedPriorities.remove(option as HabitPriority)
-                selectedPrioritiesMutableLiveData.value = _selectedPriorities
-            }
-            FilterType.COLOR -> {
-                _selectedColors.remove(option as HabitColor)
-                selectedColorsMutableLiveData.value = _selectedColors
-            }
-        }
-
-        applyFilters()
+    private fun resetFilters() {
+        filterFlow.value = filterHabitsInteractor.resetFilters(filterFlow)
     }
 
-    fun <T> addToFilter(option: T, filterType: FilterType) {
-        when (filterType) {
-            FilterType.PRIORITY -> {
-                _selectedPriorities.add(option as HabitPriority)
-                selectedPrioritiesMutableLiveData.value = _selectedPriorities
-            }
-            FilterType.COLOR -> {
-                _selectedColors.add(option as HabitColor)
-                selectedColorsMutableLiveData.value = _selectedColors
-            }
+    private fun getHabits() =
+        viewModelScope.launch(Dispatchers.IO) {
+            filterHabitsInteractor.getHabits()
         }
 
-        applyFilters()
+    fun <T> filter(option: T, filterType: FilterType, filterAction: FilterAction) {
+        filterFlow.value =
+            filterHabitsInteractor.filter(option, filterType, filterAction, filterFlow)
     }
 
     fun search(query: String) {
-        resetFilters()
-        _searchQuery = query
-
-        applyFilters()
+        filterFlow.value = filterHabitsInteractor.search(filterFlow, query)
     }
 
     fun sortBy(sortType: SortType) {
-        _sortType = sortType
-
-        applyFilters()
+        filterFlow.value = filterHabitsInteractor.sortBy(filterFlow, sortType)
     }
-
-    private fun resetFilters() {
-        _sortType = SortType.EDIT_DATE_DESCENDING
-
-        _selectedPriorities.addAll(HabitPriority.values())
-        selectedPrioritiesMutableLiveData.value = _selectedPriorities
-
-        _selectedColors.addAll(HabitColor.values())
-        selectedColorsMutableLiveData.value = _selectedColors
-
-        _searchQuery = ""
-    }
-
-    private fun applyFilters() {
-        filter.value = Filter(
-            filterHabitsUseCase.habits.asLiveData(),
-            _selectedPriorities,
-            _selectedColors,
-            _sortType,
-            _searchQuery
-        )
-    }
-
-    private fun isFilteredByPriority(priority: HabitPriority): Boolean =
-        _selectedPriorities.contains(priority)
-
-    private fun isFilteredByColor(color: HabitColor): Boolean =
-        _selectedColors.contains(color)
 
     fun getCheckedPriorities(): BooleanArray =
-        BooleanArray(HabitPriority.values().size) { index: Int ->
-            isFilteredByPriority(
-                HabitPriority.values()[index]
-            )
-        }
+        filterHabitsInteractor.getCheckedPriorities(filterFlow)
 
     fun getCheckedColors(): BooleanArray =
-        BooleanArray(HabitColor.values().size) { index: Int ->
-            isFilteredByColor(
-                HabitColor.values()[index]
-            )
-        }
+        filterHabitsInteractor.getCheckedColors(filterFlow)
+
+    fun checkHabit(habitId: String) =
+        checkHabitInteractor.checkHabit(habitId)
+
+    fun getHabitProgress(habitId: String) =
+        checkHabitInteractor.getHabitProgress(habitId)
 }
