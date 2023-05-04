@@ -9,7 +9,17 @@ interface HabitRepository {
 
     val habits: Flow<List<Habit>>
 
-    suspend fun getHabitsFromServer()
+    suspend fun getHabitsFromServer(): Pair<List<Habit>?, List<Habit>?>
+
+    suspend fun syncNotCreated(habit: Habit)
+
+    suspend fun syncNotUpdated(localHabit: Habit, remoteHabit: Habit)
+
+    suspend fun syncNotDeleted(notDeleted: List<Habit>)
+
+    suspend fun syncChecks(habit: Habit, remoteHabit: Habit?, id: String)
+
+    fun updateDatabase(habitsFromServer: List<Habit>)
 
     suspend fun createOrUpdate(habit: Habit)
 

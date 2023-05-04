@@ -12,8 +12,34 @@ class FilterHabitsInteractor(private val repository: HabitRepository) {
 
     suspend fun getHabits() =
         withContext(Dispatchers.IO) {
-            repository.getHabitsFromServer()
+            try {
+                val (habitsFromServer, localHabits) = repository.getHabitsFromServer()
+                if (habitsFromServer != null && localHabits != null) {
+                    syncLocalAndRemote(habitsFromServer, localHabits)
+                }
+            } catch (_: Exception) {}
         }
+
+    private suspend fun syncLocalAndRemote(habitsFromServer: List<Habit>, localHabits: List<Habit>) {
+        val notSyncedHabits = localHabits.filter { !it.isSynced }
+        if (notSyncedHabits.isEmpty() && habitsFromServer.size == localHabits.size) {
+            repository.updateDatabase(habitsFromServer)
+        } else {
+            notSyncedHabits.forEach {
+                val remoteHabit = habitsFromServer.find { habit -> habit.id == it.id }
+                if (remoteHabit != null) {
+                    repository.syncNotUpdated(it, remoteHabit)
+                } else {
+                    repository.syncNotCreated(it)
+                }
+            }
+            repository.syncNotDeleted(habitsFromServer.filter { isHabitDeletedLocally(it.id, localHabits) })
+        }
+    }
+
+    private fun isHabitDeletedLocally(habitId: String, localHabits: List<Habit>) =
+        localHabits.find { it.id == habitId } == null
+
 
     fun applyFilters(filter: Filter): Flow<List<Habit>> =
         repository.applyFilters(filter)
