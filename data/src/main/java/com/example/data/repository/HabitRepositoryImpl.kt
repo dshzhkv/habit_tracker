@@ -4,9 +4,13 @@ import com.example.data.db.HabitDao
 import com.example.data.entities.DeleteHabitBody
 import com.example.data.entities.HabitDoneBody
 import com.example.data.service.HabitService
+import com.example.data.toDateList
+import com.example.data.toLocal
+import com.example.data.toRequest
 import com.example.domain.HabitRepository
 import com.example.domain.entities.Filter
 import com.example.domain.entities.Habit
+import com.example.domain.entities.HabitResponse
 import com.example.domain.entities.SortType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +18,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class HabitRepositoryImpl(private val habitDao: HabitDao, private val service: HabitService): HabitRepository {
+class HabitRepositoryImpl(private val habitDao: HabitDao,
+                          private val service: HabitService): HabitRepository {
 
     override val habits: Flow<List<Habit>> = habitDao.getAll()
 
@@ -30,44 +35,44 @@ class HabitRepositoryImpl(private val habitDao: HabitDao, private val service: H
             }
     }
 
-    override fun updateDatabase(habitsFromServer: List<Habit>) {
+    override fun updateDatabase(habitsFromServer: List<HabitResponse>) {
         habitDao.clear()
-        habitDao.insert(habitsFromServer)
+        habitDao.insert(habitsFromServer.map { it.toLocal() })
     }
 
     override suspend fun syncNotCreated(habit: Habit) {
-        val response = service.addOrUpdateHabit(habit.copy(id = ""))
+        val response = service.addOrUpdateHabit(habit.copy(id = "").toRequest())
         habitDao.createOrUpdate(habit.copy(id = response.uid, isSynced = false))
         habitDao.delete(habit.id)
         syncChecks(habit, null, response.uid)
         habitDao.createOrUpdate(habit.copy(id = response.uid, isSynced = true))
     }
 
-    override suspend fun syncNotUpdated(localHabit: Habit, remoteHabit: Habit) {
-        if (localHabit.editDate > remoteHabit.editDate) {
-            service.addOrUpdateHabit(localHabit)
+    override suspend fun syncNotUpdated(localHabit: Habit, remoteHabit: HabitResponse) {
+        if (localHabit.editDate > Date(remoteHabit.date)) {
+            service.addOrUpdateHabit(localHabit.toRequest())
         }
-        if (localHabit.doneDates.size != remoteHabit.doneDates.size) {
+        if (localHabit.doneDates.size != remoteHabit.done_dates.size()) {
             syncChecks(localHabit, remoteHabit, localHabit.id)
         }
         habitDao.createOrUpdate(localHabit.copy(isSynced = true))
     }
 
-    override suspend fun syncChecks(habit: Habit, remoteHabit: Habit?, id: String) =
+    override suspend fun syncChecks(habit: Habit, remoteHabit: HabitResponse?, id: String) =
         habit.doneDates.forEach {
-            if (remoteHabit == null || !remoteHabit.doneDates.contains(it)) {
+            if (remoteHabit == null || !remoteHabit.done_dates.toDateList().contains(it)) {
                 service.checkHabit(HabitDoneBody(it, id))
             }
         }
 
-    override suspend fun syncNotDeleted(notDeleted: List<Habit>) =
-        notDeleted.forEach { service.deleteHabit(DeleteHabitBody(it.id)) }
+    override suspend fun syncNotDeleted(notDeleted: List<HabitResponse>) =
+        notDeleted.forEach { service.deleteHabit(DeleteHabitBody(it.uid)) }
 
 
     override suspend fun createOrUpdate(habit: Habit): Unit =
         withContext(Dispatchers.IO) {
             try {
-                val response = service.addOrUpdateHabit(habit)
+                val response = service.addOrUpdateHabit(habit.toRequest())
                 habitDao.createOrUpdate(habit.copy(id = response.uid, isSynced = true))
             } catch (_: Exception) {
                 if (habit.id == "") {

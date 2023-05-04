@@ -11,7 +11,6 @@ import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-import com.example.domain.entities.Habit
 import com.example.data.db.HabitDatabaseImpl
 import com.example.data.entities.HabitDoneBody
 import com.example.data.repository.HabitRepositoryImpl
@@ -60,8 +59,6 @@ class ApplicationModule(private val context: Context) {
     @Provides
     fun provideGson(): Gson =
         GsonBuilder()
-            .registerTypeAdapter(Habit::class.java, HabitSerializer())
-            .registerTypeAdapter(Habit::class.java, HabitDeserializer())
             .registerTypeAdapter(HabitDoneBody::class.java, HabitDoneBodySerializer())
             .create()
 

@@ -39,6 +39,7 @@ class EditHabitFragment : Fragment() {
 
     private var habitId: String? = null
     private var habitDoneDates: List<Date> = listOf()
+    private var habitDoneTimes: Int = 0
     private var selectedColor: HabitColor = HabitColor.defaultColor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,22 +66,6 @@ class EditHabitFragment : Fragment() {
 
         activityContext = activity as Context
 
-        val habit = viewModel.getHabit(habitId)
-        if (habit != null) {
-            autofill(habit)
-
-            habitDoneDates = habit.doneDates
-
-            binding.deleteButton.visibility = View.VISIBLE
-            binding.deleteButton.setOnClickListener {
-                viewModel.deleteHabit(habit.id)
-                findNavController().popBackStack()
-            }
-        } else {
-            binding.deleteButton.visibility = View.GONE
-        }
-
-
         setListenerOnTitleEditText()
         setListenerOnTypeRadioGroup()
         setAdapterForPrioritySpinner()
@@ -91,6 +76,22 @@ class EditHabitFragment : Fragment() {
 
         setListenerOnCloseButton()
         setListenerOnSaveButton()
+
+        val habit = viewModel.getHabit(habitId)
+        if (habit != null) {
+            autofill(habit)
+
+            habitDoneDates = habit.doneDates
+            habitDoneTimes = habit.doneTimes
+
+            binding.deleteButton.visibility = View.VISIBLE
+            binding.deleteButton.setOnClickListener {
+                viewModel.deleteHabit(habit.id)
+                findNavController().popBackStack()
+            }
+        } else {
+            binding.deleteButton.visibility = View.GONE
+        }
     }
 
     private fun autofill(habit: Habit) {
@@ -204,7 +205,7 @@ class EditHabitFragment : Fragment() {
             selectedColor,
             Date(),
             habitDoneDates,
-            0,
+            habitDoneTimes,
             false,
             habitId ?: "",
         )

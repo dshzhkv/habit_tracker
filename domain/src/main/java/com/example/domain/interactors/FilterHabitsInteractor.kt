@@ -20,20 +20,20 @@ class FilterHabitsInteractor(private val repository: HabitRepository) {
             } catch (_: Exception) {}
         }
 
-    private suspend fun syncLocalAndRemote(habitsFromServer: List<Habit>, localHabits: List<Habit>) {
+    private suspend fun syncLocalAndRemote(habitsFromServer: List<HabitResponse>, localHabits: List<Habit>) {
         val notSyncedHabits = localHabits.filter { !it.isSynced }
         if (notSyncedHabits.isEmpty() && habitsFromServer.size == localHabits.size) {
             repository.updateDatabase(habitsFromServer)
         } else {
             notSyncedHabits.forEach {
-                val remoteHabit = habitsFromServer.find { habit -> habit.id == it.id }
+                val remoteHabit = habitsFromServer.find { habit -> habit.uid == it.id }
                 if (remoteHabit != null) {
                     repository.syncNotUpdated(it, remoteHabit)
                 } else {
                     repository.syncNotCreated(it)
                 }
             }
-            repository.syncNotDeleted(habitsFromServer.filter { isHabitDeletedLocally(it.id, localHabits) })
+            repository.syncNotDeleted(habitsFromServer.filter { isHabitDeletedLocally(it.uid, localHabits) })
         }
     }
 

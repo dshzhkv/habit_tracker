@@ -21,7 +21,7 @@ class CheckHabitInteractor(private val repository: HabitRepository): CoroutineSc
         val habit = repository.getHabit(habitId)
         habit ?: return Pair(CheckHabitMessage.ERROR, null)
 
-        val doneTimes = habit.doneTimes
+        val doneTimes = habit.doneTimes + 1
         val message = when (isHabitDone(doneTimes, habit.repetitionTimes, habit.type)) {
             true -> {
                 when (habit.type) {
